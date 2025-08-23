@@ -127,7 +127,7 @@ const products = [
     category: "mariscos",
     price: 15.0,
     description: "Ceviche fresco con pescado, camarones y pulpo en leche de tigre",
-    image: "images/platillos/placeholder-eunsy.png",
+    image: "images/platillos/cevichemixto.jpg",
   },
   {
     id: 7,
@@ -477,27 +477,29 @@ function removeFromCart(productId) {
 }
 
 function showCartNotification() {
-  // Simple notification
-  const notification = document.createElement("div")
+  const notification = document.createElement("div");
   notification.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: #e67e22;
-        color: white;
-        padding: 1rem 2rem;
-        border-radius: 10px;
-        z-index: 3000;
-        animation: fadeIn 0.3s ease-out;
-    `
-  notification.textContent = "Producto añadido al carrito"
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--color-primary);
+    color: var(--color-light);
+    padding: 1.2rem 2.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--color-terra);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(212, 160, 23, 0.3);
+    z-index: 3000;
+    font-family: "Lora", serif;
+    animation: fadeIn 0.3s ease-out;
+  `;
+  notification.textContent = "Producto añadido al carrito";
 
-  document.body.appendChild(notification)
+  document.body.appendChild(notification);
 
   setTimeout(() => {
-    notification.remove()
-  }, 2000)
+    notification.remove();
+  }, 2000);
 }
 
 window.addToCart = addToCart
