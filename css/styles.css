@@ -1,12 +1,13 @@
 /* Replaced entire CSS with the exact styles from the provided file */
 :root {
-  --color-primary: #e67e22; /* Naranja principal */
-  --color-secondary: #d35400; /* Naranja oscuro */
-  --color-terra: #a84300; /* Tierra oscuro */
-  --color-light: #f5cba7; /* Tierra claro */
-  --color-dark: #4e342e; /* Marrón oscuro */
-  --color-text: #333;
-  background-image: url(images/logos/fondo1.jpg);
+  --color-primary: #4A7043; /* Forest Green */
+  --color-secondary: #8B5E3C; /* Terracotta */
+  --color-terra: #6B4E31; /* Rich Brown */
+  --color-light: #F5E8C7; /* Warm Cream */
+  --color-dark: #2F2E2B; /* Charcoal Brown */
+  --color-accent: #D4A017; /* Golden Wheat */
+  --color-text: #3C2F2F; /* Dark Brown for text */
+  --color-bg: #FDF6E3; /* Warm Off-White background */
 }
 
 /* Estilos generales */
@@ -14,24 +15,25 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Lora", "Georgia", serif;
 }
 
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
-  line-height: 1.6;
+  line-height: 1.8;
+  background-image: url('images/textures/wood-grain.jpg'); /* Wood texture background */
+  background-size: cover;
+  background-attachment: fixed;
 }
 
 /* Header */
 header {
   background-color: var(--color-dark);
   color: white;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem 2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  border-bottom: 3px solid var(--color-secondary);
 }
 
 .logo-container img {
@@ -61,28 +63,36 @@ nav ul li a:hover {
 /* Hero section */
 .hero {
   text-align: center;
-  padding: 4rem 2rem;
-  background: linear-gradient(rgba(78, 52, 46, 0.8), rgba(78, 52, 46, 0.8)), url("../images/hero-bg.jpg") center / cover;
+  padding: 5rem 2rem;
+  background: linear-gradient(rgba(47, 46, 43, 0.7), rgba(47, 46, 43, 0.7)), url('images/backgrounds/forest-blur.jpg') center / cover;
   color: white;
+  border-bottom: 5px solid var(--color-light);
 }
 
 .hero h1 {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
+  font-family: "Merriweather", serif;
+  font-size: 3rem;
+  margin-bottom: 1.2rem;
   color: var(--color-light);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .hero p {
-  font-size: 1.2rem;
-  max-width: 800px;
+  font-size: 1.3rem;
+  max-width: 900px;
   margin: 0 auto;
+  font-style: italic;
 }
 
 /* Eventos destacados */
 .eventos-destacados {
-  padding: 2rem;
+  padding: 3rem 2rem;
+  background: var(--color-light);
+  background-image: url('images/textures/parchment.jpg'); /* Parchment texture */
+  border-radius: 10px;
+  margin: 2rem auto;
   max-width: 1400px;
-  margin: 0 auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .eventos-destacados h2 {
@@ -98,11 +108,11 @@ nav ul li a:hover {
 }
 
 .evento-card {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--color-secondary);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(212, 160, 23, 0.3);
 }
 
 .evento-card:hover {
@@ -117,9 +127,11 @@ nav ul li a:hover {
 
 /* Sección de restaurantes */
 .restaurantes {
-  padding: 2rem;
+  padding: 3rem 2rem;
   max-width: 1400px;
   margin: 0 auto;
+  background: url('images/textures/burlap.jpg'); /* Burlap texture */
+  border-radius: 10px;
 }
 
 .restaurantes h2 {
@@ -160,13 +172,10 @@ nav ul li a:hover {
 }
 
 .restaurante-card {
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
-  display: flex;
-  flex-direction: column;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  border: 2px solid var(--color-terra);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(212, 160, 23, 0.2);
 }
 
 .restaurante-card:hover {
@@ -185,6 +194,7 @@ nav ul li a:hover {
   height: 100%;
   object-fit: cover;
   transition: transform 0.5s;
+  border-bottom: 3px solid var(--color-secondary);
 }
 
 .restaurante-card:hover .card-imagen img {
@@ -195,12 +205,13 @@ nav ul li a:hover {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: var(--color-secondary);
   color: white;
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: bold;
+  background: var(--color-primary);
+  border: 1px solid var(--color-light);
 }
 
 .card-contenido {
@@ -212,7 +223,8 @@ nav ul li a:hover {
 
 .card-contenido h3 {
   margin: 0 0 0.5rem;
-  color: var(--color-terra);
+  font-family: "Merriweather", serif;
+  color: var(--color-primary);
   font-size: 1.25rem;
 }
 
@@ -254,11 +266,27 @@ nav ul li a:hover {
   background: var(--color-secondary);
 }
 
+/* Filtros */
+.filtro-btn {
+  background: var(--color-light);
+  border: 1px solid var(--color-terra);
+  border-radius: 25px;
+  padding: 0.6rem 1.2rem;
+  font-family: "Roboto Slab", serif;
+}
+
+.filtro-btn.active {
+  background: var(--color-primary);
+  color: var(--color-light);
+  box-shadow: 0 2px 6px rgba(212, 160, 23, 0.3);
+}
+
 /* Footer */
 footer {
   background: var(--color-dark);
   color: white;
-  padding: 3rem 2rem 1rem;
+  padding: 4rem 2rem 2rem;
+  border-top: 5px solid var(--color-secondary);
 }
 
 .footer-content {
@@ -269,7 +297,8 @@ footer {
 }
 
 .footer-section h3 {
-  color: var(--color-primary);
+  font-family: "Merriweather", serif;
+  color: var(--color-accent);
   margin-bottom: 1rem;
 }
 
@@ -368,7 +397,8 @@ footer {
 }
 
 .menu-header h1 {
-  color: var(--color-terra);
+  font-family: "Merriweather", serif;
+  color: var(--color-primary);
   font-size: 2.5rem;
   margin-bottom: 0.5rem;
 }
@@ -378,6 +408,10 @@ footer {
   font-size: 1.2rem;
   font-weight: 500;
   margin-bottom: 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid var(--color-terra);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(212, 160, 23, 0.2);
 }
 
 .restaurante-info {
@@ -436,10 +470,11 @@ footer {
 }
 
 .menu-item {
-  background: white;
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid var(--color-terra);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(212, 160, 23, 0.2);
   overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s, box-shadow 0.3s;
   display: flex;
   flex-direction: column;
@@ -488,7 +523,8 @@ footer {
 
 .item-info h3 {
   margin: 0 0 0.5rem;
-  color: var(--color-terra);
+  font-family: "Merriweather", serif;
+  color: var(--color-primary);
   font-size: 1.25rem;
 }
 
@@ -566,9 +602,9 @@ footer {
   flex-grow: 1;
   padding: 0 1rem;
   background: var(--color-primary);
+  border-radius: 8px;
   color: white;
   border: none;
-  border-radius: 4px;
   cursor: pointer;
   transition: background 0.3s;
   display: flex;
@@ -580,20 +616,22 @@ footer {
 
 .add-to-cart:hover {
   background: var(--color-secondary);
+  box-shadow: 0 2px 6px rgba(212, 160, 23, 0.3);
 }
 
 /* Resumen del pedido */
 .order-summary {
   flex: 1;
-  background: white;
   padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   align-self: flex-start;
   position: sticky;
   top: 1rem;
   max-height: 90vh;
   overflow-y: auto;
+  background: var(--color-light);
+  border: 2px solid var(--color-terra);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(212, 160, 23, 0.2);
 }
 
 .order-header {
@@ -604,7 +642,8 @@ footer {
 }
 
 .order-header h2 {
-  color: var(--color-terra);
+  font-family: "Merriweather", serif;
+  color: var(--color-primary);
   margin: 0;
   display: flex;
   align-items: center;
@@ -716,10 +755,10 @@ footer {
 .btn-primary {
   width: 100%;
   padding: 0.75rem;
-  background: var(--color-terra);
+  background: var(--color-primary);
+  border-radius: 8px;
   color: white;
   border: none;
-  border-radius: 4px;
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.3s;
@@ -730,7 +769,8 @@ footer {
 }
 
 .btn-primary:hover {
-  background: var(--color-dark);
+  background: var(--color-secondary);
+  box-shadow: 0 2px 6px rgba(212, 160, 23, 0.3);
 }
 
 /* Added back button styles for navigation */
@@ -756,10 +796,11 @@ footer {
 .event-tabs {
   display: flex;
   margin-bottom: 1.5rem;
-  background: white;
-  border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: var(--color-light);
+  border: 2px solid var(--color-terra);
+  border-radius: 12px;
 }
 
 .tab-btn {
@@ -773,7 +814,7 @@ footer {
 
 .tab-btn.active {
   background: var(--color-primary);
-  color: white;
+  color: var(--color-light);
 }
 
 .tab-content {
@@ -801,4 +842,21 @@ footer {
     margin-bottom: 2rem;
     width: 100%;
   }
+}
+
+/* Notification */
+.showCartNotification {
+  animation: fadeIn 0.3s ease-out;
+  background: var(--color-primary);
+  color: var(--color-light);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.restaurante-card, .menu-item, .evento-card {
+  animation: fadeIn 0.5s ease-out;
 }
