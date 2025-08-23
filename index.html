@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Comarca GastroPark</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Replaced entire structure with the exact layout from the provided HTML -->
+    <header>
+        <div class="logo-container">
+            <img src="/placeholder.svg?height=60&width=120" alt="La Comarca GastroPark">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#" onclick="showHome()">Inicio</a></li>
+                <li><a href="#" onclick="showEvents()">Eventos</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Home View -->
+        <div id="homeView">
+            <section class="hero">
+                <h1>Bienvenidos a La Comarca GastroPark</h1>
+                <p>Descubre una experiencia gastronómica única con 10 restaurantes especializados</p>
+            </section>
+
+            <section class="eventos-destacados">
+                <h2>Eventos de Hoy</h2>
+                <div class="eventos-grid">
+                    <div class="evento-card">
+                        <h3>Noche de Jazz</h3>
+                        <p>El Barril - 8:00 PM</p>
+                    </div>
+                    <div class="evento-card">
+                        <h3>Happy Hour</h3>
+                        <p>Cócteles & Más - 5:00 PM - 7:00 PM</p>
+                    </div>
+                    <div class="evento-card">
+                        <h3>Taller de Pizza</h3>
+                        <p>Piazza Napoli - 6:00 PM</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="restaurantes">
+                <h2>Nuestros Restaurantes</h2>
+                
+                <!-- Filtros por tipo de cocina -->
+                <div class="filtros-restaurantes">
+                    <button class="filtro-btn active" data-tipo="todos">Todos</button>
+                    <button class="filtro-btn" data-tipo="bar">Bar</button>
+                    <button class="filtro-btn" data-tipo="pizzeria">Pizzería</button>
+                    <button class="filtro-btn" data-tipo="mariscos">Mariscos</button>
+                    <button class="filtro-btn" data-tipo="mexicana">Mexicana</button>
+                    <button class="filtro-btn" data-tipo="carnes">Carnes</button>
+                    <button class="filtro-btn" data-tipo="asiatica">Asiática</button>
+                    <button class="filtro-btn" data-tipo="vegetariana">Vegetariana</button>
+                    <button class="filtro-btn" data-tipo="italiana">Italiana</button>
+                    <button class="filtro-btn" data-tipo="postres">Postres</button>
+                </div>
+                
+                <!-- Grid de restaurantes -->
+                <div class="restaurantes-grid" id="restaurantesGrid">
+                    <!-- Los restaurantes se cargarán aquí con JavaScript -->
+                </div>
+
+                <!-- Botón para ver todos los productos -->
+                <div style="text-align: center; margin: 2rem 0;">
+                    <button class="btn-primary" onclick="showAllProducts()">
+                        <i class="fas fa-th-large"></i>
+                        Ver Todos los Productos
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <!-- Menu View (Individual restaurant or all products) -->
+        <div id="menuView" class="menu-page" style="display: none;">
+            <div class="menu-header">
+                <button class="btn-back" onclick="showHome()">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </button>
+                <h1 id="menuTitle">Todos los Menús</h1>
+                <p class="restaurante-tipo" id="menuSubtitle">Explora todos nuestros productos</p>
+                <div class="restaurante-info" id="restauranteInfo" style="display: none;">
+                    <span><i class="far fa-clock"></i> <span id="horarioInfo"></span></span>
+                    <span><i class="fas fa-star"></i> <span id="ratingInfo"></span></span>
+                </div>
+            </div>
+
+            <!-- Filtros del menú -->
+            <div class="menu-filters">
+                <button class="filter-btn active" data-category="todos">Todos</button>
+                <button class="filter-btn" data-category="bebidas">Bebidas</button>
+                <button class="filter-btn" data-category="entradas">Entradas</button>
+                <button class="filter-btn" data-category="platos-principales">Platos Principales</button>
+                <button class="filter-btn" data-category="postres">Postres</button>
+            </div>
+
+            <!-- Grid de platillos -->
+            <div class="menu-grid" id="menuGrid">
+                <!-- Los productos se cargarán aquí con JavaScript -->
+            </div>
+
+            <!-- Resumen del pedido -->
+            <div class="order-summary" id="orderSummary">
+                <div class="order-header">
+                    <h2><i class="fas fa-shopping-cart"></i> Mi Pedido</h2>
+                    <button class="btn-clear" onclick="clearCart()">
+                        <i class="fas fa-trash"></i> Limpiar
+                    </button>
+                </div>
+                
+                <div class="order-items" id="orderItems">
+                    <div class="empty-cart">
+                        <p>Tu pedido está vacío</p>
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                </div>
+                
+                <div class="order-total">
+                    Total: $<span id="orderTotal">0.00</span>
+                </div>
+                
+                <div class="delivery-options">
+                    <div class="delivery-option">
+                        <input type="radio" id="pickup" name="delivery" value="pickup" checked>
+                        <label for="pickup">Recoger en local</label>
+                    </div>
+                    <div class="delivery-option">
+                        <input type="radio" id="delivery" name="delivery" value="delivery">
+                        <label for="delivery">Delivery (+$2.00)</label>
+                    </div>
+                </div>
+                
+                <button class="btn-primary" onclick="checkout()">
+                    <i class="fas fa-check"></i> Confirmar Pedido
+                </button>
+            </div>
+        </div>
+
+        <!-- Events View -->
+        <div id="eventsView" style="display: none;">
+            <div class="menu-header">
+                <button class="btn-back" onclick="showHome()">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </button>
+                <h1>Eventos</h1>
+                <p class="restaurante-tipo">Descubre lo que está pasando</p>
+            </div>
+
+            <div class="event-tabs">
+                <button class="tab-btn active" data-tab="today">Hoy</button>
+                <button class="tab-btn" data-tab="week">Esta Semana</button>
+                <button class="tab-btn" data-tab="month">Este Mes</button>
+            </div>
+
+            <div class="event-content">
+                <div id="today" class="tab-content active">
+                    <div class="eventos-grid">
+                        <div class="evento-card">
+                            <h3>Noche de Jazz</h3>
+                            <p>El Barril - 8:00 PM</p>
+                            <p>Disfruta de jazz en vivo con nuestro combo de cervezas artesanales</p>
+                        </div>
+                        <div class="evento-card">
+                            <h3>Happy Hour</h3>
+                            <p>Cócteles & Más - 5:00 PM - 7:00 PM</p>
+                            <p>2x1 en todos los cócteles de la casa</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="week" class="tab-content">
+                    <div class="eventos-grid">
+                        <div class="evento-card">
+                            <h3>Taller de Pizza</h3>
+                            <p>Piazza Napoli - Martes 15 - 6:00 PM</p>
+                            <p>Aprende a hacer pizza auténtica con nuestros chefs</p>
+                        </div>
+                        <div class="evento-card">
+                            <h3>Mariscada Especial</h3>
+                            <p>Mariscos del Caribe - Jueves 17 - Todo el día</p>
+                            <p>Promoción especial en platos de mariscos</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="month" class="tab-content">
+                    <div class="eventos-grid">
+                        <div class="evento-card">
+                            <h3>Festival de Cerveza</h3>
+                            <p>Todos - 25-27 - Todo el día</p>
+                            <p>Evento especial con cervezas artesanales de todo el país</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer id="contacto">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Horario</h3>
+                <p>Lunes a Viernes: 12:00 PM - 12:00 AM</p>
+                <p>Fin de semana: 11:00 AM - 2:00 AM</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contacto</h3>
+                <p><i class="fas fa-envelope"></i> info@comarcagastropark.com</p>
+                <p><i class="fas fa-phone"></i> +123 456 7890</p>
+            </div>
+            <div class="footer-section">
+                <h3>Síguenos</h3>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2024 La Comarca GastroPark. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="js/scripts.js"></script>
+</body>
+</html>
