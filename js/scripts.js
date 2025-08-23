@@ -121,13 +121,13 @@ const products = [
   // Mariscos del Caribe products
   {
     id: 6,
-    name: " Mixto",
+    name: "Ceviche Mixto",
     restaurant: "mariscos-caribe",
     restaurantName: "Mariscos del Caribe",
     category: "mariscos",
     price: 15.0,
-    description: " fresco con pescado, camarones y pulpo en leche de tigre",
-    image: "images/platillos/comida.jpg",
+    description: "Ceviche fresco con pescado, camarones y pulpo en leche de tigre",
+    image: "images/platillos/placeholder-eunsy.png",
   },
   {
     id: 7,
@@ -259,6 +259,7 @@ function initializeApp() {
   renderRestaurantes(restaurants)
   showHome()
   setupEventListeners()
+  updateCartDisplay() // Asegura que el carrito se muestre correctamente al cargar
 }
 
 document.addEventListener("DOMContentLoaded", initializeApp)
@@ -464,13 +465,14 @@ function updateCartDisplay() {
 function clearCart() {
   cart.length = 0
   updateCartDisplay()
+  showCartNotification()
 }
-
 function removeFromCart(productId) {
   const idx = cart.findIndex((item) => item.id === productId)
   if (idx !== -1) {
     cart.splice(idx, 1)
     updateCartDisplay()
+    showCartNotification()
   }
 }
 
