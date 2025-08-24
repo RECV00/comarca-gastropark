@@ -1,4 +1,3 @@
-// Sample data - hardcoded as requested
 const restaurants = [
   {
     id: "el-barril",
@@ -63,10 +62,9 @@ const restaurants = [
     hours: "7:00 AM - 8:00 PM",
     image: "images/platillos/cozy-corner-cafe.png",
   },
-]
+];
 
 const products = [
-  // El Barril products
   {
     id: 1,
     name: "Cerveza Artesanal IPA",
@@ -87,7 +85,6 @@ const products = [
     description: "Alitas de pollo con salsa BBQ casera y apio",
     image: "images/platillos/bbq-wings.png",
   },
-  // Piazza Napoli products
   {
     id: 3,
     name: "Pizza Margherita",
@@ -118,7 +115,6 @@ const products = [
     description: "Postre italiano con café, mascarpone y cacao",
     image: "images/platillos/classic-tiramisu.png",
   },
-  // Mariscos del Caribe products
   {
     id: 6,
     name: "Ceviche Mixto",
@@ -139,7 +135,6 @@ const products = [
     description: "Camarones salteados en aceite de oliva con ajo y perejil",
     image: "images/platillos/garlic-shrimp.png",
   },
-  // Sabores de México products
   {
     id: 8,
     name: "Tacos al Pastor",
@@ -170,7 +165,6 @@ const products = [
     description: "Nachos con queso, frijoles, jalapeños y crema",
     image: "images/platillos/supreme-nachos.png",
   },
-  // Cócteles & Más products
   {
     id: 11,
     name: "Mojito Clásico",
@@ -191,7 +185,7 @@ const products = [
     description: "Ron, crema de coco, jugo de piña y hielo",
     image: "images/platillos/pina-colada.png",
   },
-]
+];
 
 const events = {
   today: [
@@ -235,79 +229,71 @@ const events = {
       description: "Menús especiales y degustaciones en todos los restaurantes",
     },
   ],
-}
+};
 
-// Global state
-const cart = []
-let currentView = "home" // home, menu, events
-let currentRestaurant = null
+const cart = [];
+let currentView = "home";
+let currentRestaurant = null;
 
-// DOM elements
-const homeView = document.getElementById("homeView")
-const menuView = document.getElementById("menuView")
-const eventsView = document.getElementById("eventsView")
-const restaurantesGrid = document.getElementById("restaurantesGrid")
-const menuGrid = document.getElementById("menuGrid")
-const menuTitle = document.getElementById("menuTitle")
-const menuSubtitle = document.getElementById("menuSubtitle")
-const restauranteInfo = document.getElementById("restauranteInfo")
-const horarioInfo = document.getElementById("horarioInfo")
-const ratingInfo = document.getElementById("ratingInfo")
+const homeView = document.getElementById("homeView");
+const menuView = document.getElementById("menuView");
+const eventsView = document.getElementById("eventsView");
+const restaurantesGrid = document.getElementById("restaurantesGrid");
+const menuGrid = document.getElementById("menuGrid");
+const menuTitle = document.getElementById("menuTitle");
+const menuSubtitle = document.getElementById("menuSubtitle");
+const restauranteInfo = document.getElementById("restauranteInfo");
+const horarioInfo = document.getElementById("horarioInfo");
+const ratingInfo = document.getElementById("ratingInfo");
 
-// Inicialización principal
 function initializeApp() {
-  renderRestaurantes(restaurants)
-  showHome()
-  setupEventListeners()
-  updateCartDisplay() // Asegura que el carrito se muestre correctamente al cargar
+  renderRestaurantes(restaurants);
+  showHome();
+  setupEventListeners();
+  updateCartDisplay();
 }
 
-document.addEventListener("DOMContentLoaded", initializeApp)
+document.addEventListener("DOMContentLoaded", initializeApp);
 
 function setupEventListeners() {
-  // Filtros de restaurantes
   document.querySelectorAll(".filtro-btn").forEach((button) => {
     button.addEventListener("click", () => {
-      document.querySelectorAll(".filtro-btn").forEach((btn) => btn.classList.remove("active"))
-      button.classList.add("active")
-      filterRestaurantes(button.dataset.tipo)
-    })
-  })
+      document.querySelectorAll(".filtro-btn").forEach((btn) => btn.classList.remove("active"));
+      button.classList.add("active");
+      filterRestaurantes(button.dataset.tipo);
+    });
+  });
 
-  // Filtros de menú
   document.querySelectorAll(".filter-btn").forEach((button) => {
     button.addEventListener("click", () => {
-      document.querySelectorAll(".filter-btn").forEach((btn) => btn.classList.remove("active"))
-      button.classList.add("active")
-      filterMenu(button.dataset.category)
-    })
-  })
+      document.querySelectorAll(".filter-btn").forEach((btn) => btn.classList.remove("active"));
+      button.classList.add("active");
+      filterMenu(button.dataset.category);
+    });
+  });
 
-  // Tabs de eventos
   document.querySelectorAll(".tab-btn").forEach((button) => {
     button.addEventListener("click", () => {
-      document.querySelectorAll(".tab-btn").forEach((btn) => btn.classList.remove("active"))
-      button.classList.add("active")
-      const tab = button.dataset.tab
+      document.querySelectorAll(".tab-btn").forEach((btn) => btn.classList.remove("active"));
+      button.classList.add("active");
+      const tab = button.dataset.tab;
       document.querySelectorAll(".tab-content").forEach((content) => {
-        content.classList.remove("active")
-      })
-      const activeTab = document.getElementById(tab)
-      if (activeTab) activeTab.classList.add("active")
-    })
-  })
+        content.classList.remove("active");
+      });
+      const activeTab = document.getElementById(tab);
+      if (activeTab) activeTab.classList.add("active");
+    });
+  });
 
   const floatingCartBtn = document.getElementById("floatingCartBtn");
   if (floatingCartBtn) {
     floatingCartBtn.addEventListener("click", () => {
-      // Ensure we're in the menu view
       if (currentView !== "menu") {
         if (currentRestaurant) {
           showRestaurantMenu(currentRestaurant);
         } else {
           showAllProducts();
         }
-        // Use a slight delay to ensure DOM is updated
         setTimeout(() => {
           const orderSummary = document.getElementById("orderSummary");
           if (orderSummary) {
@@ -315,7 +301,6 @@ function setupEventListeners() {
           }
         }, 100);
       } else {
-        // Already in menu view, just scroll
         const orderSummary = document.getElementById("orderSummary");
         if (orderSummary) {
           orderSummary.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -326,52 +311,52 @@ function setupEventListeners() {
 }
 
 function showHome() {
-  currentView = "home"
-  homeView.style.display = "block"
-  menuView.style.display = "none"
-  eventsView.style.display = "none"
+  currentView = "home";
+  homeView.style.display = "block";
+  menuView.style.display = "none";
+  eventsView.style.display = "none";
 }
 
 function showEvents() {
-  currentView = "events"
-  homeView.style.display = "none"
-  menuView.style.display = "none"
-  eventsView.style.display = "block"
+  currentView = "events";
+  homeView.style.display = "none";
+  menuView.style.display = "none";
+  eventsView.style.display = "block";
 }
 
 function showAllProducts() {
-  currentRestaurant = null
-  currentView = "menu"
-  homeView.style.display = "none"
-  menuView.style.display = "flex"
-  eventsView.style.display = "none"
-  menuTitle.textContent = "Todos los Menús"
-  menuSubtitle.textContent = "Explora todos nuestros productos"
-  restauranteInfo.style.display = "none"
-  renderMenu(products)
+  currentRestaurant = null;
+  currentView = "menu";
+  homeView.style.display = "none";
+  menuView.style.display = "flex";
+  eventsView.style.display = "none";
+  menuTitle.textContent = "Todos los Menús";
+  menuSubtitle.textContent = "Explora todos nuestros productos";
+  restauranteInfo.style.display = "none";
+  renderMenu(products);
 }
 
 function showRestaurantMenu(restaurantId) {
-  currentRestaurant = restaurantId
-  currentView = "menu"
-  homeView.style.display = "none"
-  menuView.style.display = "flex"
-  eventsView.style.display = "none"
-  const restaurante = restaurants.find((r) => r.id === restaurantId)
-  menuTitle.textContent = restaurante ? restaurante.name : "Menú"
-  menuSubtitle.textContent = restaurante ? restaurante.description : ""
+  currentRestaurant = restaurantId;
+  currentView = "menu";
+  homeView.style.display = "none";
+  menuView.style.display = "flex";
+  eventsView.style.display = "none";
+  const restaurante = restaurants.find((r) => r.id === restaurantId);
+  menuTitle.textContent = restaurante ? restaurante.name : "Menú";
+  menuSubtitle.textContent = restaurante ? restaurante.description : "";
   if (restaurante) {
-    restauranteInfo.style.display = "flex"
-    horarioInfo.textContent = restaurante.hours
-    ratingInfo.textContent = restaurante.rating + " ⭐"
+    restauranteInfo.style.display = "flex";
+    horarioInfo.textContent = restaurante.hours;
+    ratingInfo.textContent = restaurante.rating + " ⭐";
   } else {
-    restauranteInfo.style.display = "none"
+    restauranteInfo.style.display = "none";
   }
-  renderMenu(products.filter((p) => p.restaurant === restaurantId))
+  renderMenu(products.filter((p) => p.restaurant === restaurantId));
 }
 
 function renderRestaurantes(restaurantes) {
-  if (!restaurantesGrid) return
+  if (!restaurantesGrid) return;
   restaurantesGrid.innerHTML = restaurantes
     .map(
       (r) => `
@@ -392,87 +377,104 @@ function renderRestaurantes(restaurantes) {
       </div>
     `,
     )
-    .join("")
+    .join("");
 }
 
 function filterRestaurantes(tipo) {
   if (tipo === "todos") {
-    renderRestaurantes(restaurants)
+    renderRestaurantes(restaurants);
   } else {
-    renderRestaurantes(restaurants.filter((r) => r.type === tipo))
+    renderRestaurantes(restaurants.filter((r) => r.type === tipo));
   }
 }
 
 function renderMenu(menuItems) {
-  if (!menuGrid) return
+  if (!menuGrid) return;
   if (menuItems.length === 0) {
-    menuGrid.innerHTML = `<div class="no-items">No hay productos disponibles</div>`
-    return
+    menuGrid.innerHTML = `<div class=\"no-items\">No hay productos disponibles</div>`;
+    return;
   }
   menuGrid.innerHTML = menuItems
     .map(
       (item) => `
-      <div class="menu-item">
-        <div class="item-image-container">
-          <img src="${item.image}" alt="${item.name}" loading="lazy">
+      <div class=\"menu-item\">
+        <div class=\"item-image-container\">
+          <img src=\"${item.image}\" alt=\"${item.name}\" loading=\"lazy\">
         </div>
-        <div class="item-info">
+        <div class=\"item-info\">
           <h3>${item.name}</h3>
-          <div class="item-description">${item.description}</div>
-          <div class="item-details">
-            <span class="item-price">₡${(item.price * 650).toLocaleString()}</span>
+          <div style=\"font-size:0.95em;color:var(--color-secondary);margin-bottom:0.3rem;\">${item.restaurantName}</div>
+          <div class=\"item-description\">${item.description}</div>
+          <div class=\"item-details\">
+            <span class=\"item-price\">₡${(item.price * 650).toLocaleString()}</span>
           </div>
-          <div class="item-actions">
-            <button class="add-to-cart" onclick="addToCart(${item.id})"><i class="fas fa-plus"></i> Agregar</button>
+          <div class=\"item-actions\">
+            <button class=\"add-to-cart\" onclick=\"showDishModal(${item.id})\"><i class=\"fas fa-eye\"></i> Ver</button>
           </div>
         </div>
       </div>
     `,
     )
-    .join("")
+    .join("");
 }
 
-function filterMenu(category) {
-  let items = currentRestaurant ? products.filter((p) => p.restaurant === currentRestaurant) : products
-  if (category === "todos") {
-    renderMenu(items)
-  } else {
-    renderMenu(items.filter((p) => p.category === category))
-  }
-}
-
-function addToCart(productId) {
+function showDishModal(productId) {
   const product = products.find((p) => p.id === productId);
   if (!product) return;
+  const modal = document.getElementById("dishModal");
+  document.getElementById("dishName").textContent = product.name;
+  document.getElementById("dishDescription").textContent = product.description;
+  document.getElementById("dishPrice").textContent = `₡${(product.price * 650).toLocaleString()}`;
+  const restaurantLink = document.getElementById("restaurantLink");
+  restaurantLink.textContent = product.restaurantName;
+  restaurantLink.dataset.restaurantId = product.restaurant;
+  restaurantLink.onclick = function() {
+    closeModal();
+    setTimeout(() => showRestaurantMenu(product.restaurant), 200);
+  };
+  document.getElementById("dishAllergens").textContent = product.allergens || "No especificado";
+  document.getElementById("suggestions").value = "";
+  modal.style.display = "block";
+  modal.dataset.productId = productId;
+}
 
+function closeModal() {
+  const modal = document.getElementById("dishModal");
+  modal.style.display = "none";
+}
+
+function addToCartWithSuggestion() {
+  const modal = document.getElementById("dishModal");
+  const productId = parseInt(modal.dataset.productId);
+  const suggestion = document.getElementById("suggestions").value;
+  const product = products.find((p) => p.id === productId);
+  if (!product) return;
   const existingItem = cart.find((item) => item.id === productId);
-
   if (existingItem) {
     existingItem.quantity += 1;
+    existingItem.suggestion = suggestion;
   } else {
     cart.push({
       ...product,
       quantity: 1,
+      suggestion: suggestion,
     });
   }
-
   updateCartDisplay();
   showCartNotification();
+  closeModal();
 }
 
-function adjustQuantity(productId, change) {
-  const item = cart.find((item) => item.id === productId);
-  if (!item) return;
-
-  item.quantity += change;
-  if (item.quantity <= 0) {
-    const index = cart.findIndex((i) => i.id === productId);
-    cart.splice(index, 1);
-  }
-
-  updateCartDisplay();
-  showCartNotification();
-}
+window.addToCart = addToCart;
+window.showRestaurantMenu = showRestaurantMenu;
+window.showAllProducts = showAllProducts;
+window.showHome = showHome;
+window.showEvents = showEvents;
+window.clearCart = clearCart;
+window.removeFromCart = removeFromCart;
+window.showDishModal = showDishModal;
+window.closeModal = closeModal;
+window.addToCartWithSuggestion = addToCartWithSuggestion;
 
 function updateCartDisplay() {
   const orderItems = document.getElementById("orderItems");
@@ -480,7 +482,7 @@ function updateCartDisplay() {
   if (!orderItems || !orderTotal) return;
 
   if (cart.length === 0) {
-    orderItems.innerHTML = `<div class="empty-cart"><p>Tu pedido está vacío</p><i class="fas fa-shopping-cart"></i></div>`;
+    orderItems.innerHTML = `<div class=\"empty-cart\"><p>Tu pedido está vacío</p><i class=\"fas fa-shopping-cart\"></i></div>`;
     orderTotal.textContent = "0.00";
     return;
   }
@@ -488,14 +490,18 @@ function updateCartDisplay() {
   orderItems.innerHTML = cart
     .map(
       (item) => `
-      <div class="order-item">
-        <span class="order-item-name">${item.name}</span>
-        <div class="quantity-selector">
-          <button class="quantity-btn" onclick="adjustQuantity(${item.id}, -1)">-</button>
-          <input type="number" class="quantity-input" value="${item.quantity}" readonly>
-          <button class="quantity-btn" onclick="adjustQuantity(${item.id}, 1)">+</button>
+      <div class=\"order-item\" style=\"background:rgba(255,255,255,0.97);border-radius:10px;padding:1rem;margin-bottom:0.7rem;box-shadow:0 2px 8px rgba(212,160,23,0.08);display:flex;flex-direction:column;\">
+        <div style=\"display:flex;justify-content:space-between;align-items:center;\">
+          <span class=\"order-item-name\" style=\"font-weight:600;color:var(--color-primary);font-size:1.1rem;\">${item.name}</span>
+          <span style=\"font-size:0.95em;color:#666;\">x${item.quantity}</span>
         </div>
-        <span class="order-item-price">₡${(item.price * 650 * item.quantity).toLocaleString()}</span>
+        <div style=\"display:flex;align-items:center;gap:0.5rem;margin-top:0.5rem;\">
+          <button class=\"quantity-btn\" style=\"background:var(--color-light);border:1px solid var(--color-terra);border-radius:50%;width:28px;height:28px;font-size:1.1rem;cursor:pointer;\" onclick=\"adjustQuantity(${item.id}, -1)\">-</button>
+          <input type=\"number\" class=\"quantity-input\" value=\"${item.quantity}\" readonly style=\"width:36px;text-align:center;border:none;background:transparent;font-size:1rem;\">
+          <button class=\"quantity-btn\" style=\"background:var(--color-light);border:1px solid var(--color-terra);border-radius:50%;width:28px;height:28px;font-size:1.1rem;cursor:pointer;\" onclick=\"adjustQuantity(${item.id}, 1)\">+</button>
+          <span class=\"order-item-price\" style=\"font-weight:bold;color:var(--color-secondary);margin-left:auto;\">₡${(item.price * 650 * item.quantity).toLocaleString()}</span>
+        </div>
+        <div style='font-size:0.95em;color:#d4a017;margin-top:6px;'>Sugerencia: ${item.suggestion && item.suggestion.trim() ? item.suggestion : "Sin sugerencias"}</div>
       </div>
     `,
     )
@@ -506,21 +512,27 @@ function updateCartDisplay() {
 }
 
 function clearCart() {
-  cart.length = 0
-  updateCartDisplay()
-  showCartNotification()
+  cart.length = 0;
+  updateCartDisplay();
 }
+
 function removeFromCart(productId) {
-  const idx = cart.findIndex((item) => item.id === productId)
+  const idx = cart.findIndex((item) => item.id === productId);
   if (idx !== -1) {
-    cart.splice(idx, 1)
-    updateCartDisplay()
-    showCartNotification()
+    cart.splice(idx, 1);
+    updateCartDisplay();
   }
 }
 
 function showCartNotification() {
+  // Remove any existing notification
+  const existingNotification = document.querySelector(".cart-notification");
+  if (existingNotification) {
+    existingNotification.remove();
+  }
+
   const notification = document.createElement("div");
+  notification.className = "cart-notification";
   notification.style.cssText = `
     position: fixed;
     top: 50%;
@@ -545,10 +557,13 @@ function showCartNotification() {
   }, 2000);
 }
 
-window.addToCart = addToCart
-window.showRestaurantMenu = showRestaurantMenu
-window.showAllProducts = showAllProducts
-window.showHome = showHome
-window.showEvents = showEvents
-window.clearCart = clearCart
-window.removeFromCart = removeFromCart
+function adjustQuantity(productId, change) {
+  const item = cart.find((item) => item.id === productId);
+  if (!item) return;
+  item.quantity += change;
+  if (item.quantity <= 0) {
+    const index = cart.findIndex((i) => i.id === productId);
+    cart.splice(index, 1);
+  }
+  updateCartDisplay();
+}

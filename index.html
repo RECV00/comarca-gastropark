@@ -11,7 +11,7 @@
 <body>
     <header>
         <div class="logo-container">
-            <img src="images/logos/logo-comarca.jpg" alt="La Comarca GastroPark">
+            <img src="images/logos/logo-comarca.png" alt="La Comarca GastroPark">
         </div>
         <nav>
             <ul>
@@ -57,8 +57,8 @@
                     <button class="filtro-btn" data-tipo="mexicana">Mexicana</button>
                     <button class="filtro-btn" data-tipo="carnes">Carnes</button>
                     <button class="filtro-btn" data-tipo="asiatica">Asiática</button>
-                    <button class="filtro-btn" data-tipo="vegetariana">Vegetariana</button>
                     <button class="filtro-btn" data-tipo="italiana">Italiana</button>
+                    <button class="filtro-btn" data-tipo="vegetariana">Vegetariana</button>
                     <button class="filtro-btn" data-tipo="postres">Postres</button>
                 </div>
                 <div class="restaurantes-grid" id="restaurantesGrid"></div>
@@ -118,6 +118,21 @@
             <button id="floatingCartBtn" style="position: fixed; bottom: 40px; right: 40px; z-index: 1000; background: #ff9800; color: #fff; border: none; border-radius: 50%; width: 60px; height: 60px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-size: 2rem; display: flex; align-items: center; justify-content: center; cursor: pointer;">
                 <i class="fas fa-shopping-cart"></i>
             </button>
+
+            <!-- New modal for dish details -->
+            <div id="dishModal" class="modal" style="display:none;position:fixed;z-index:4000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);align-items:center;justify-content:center;">
+              <div class="modal-content" style="background:#fff;padding:2rem;border-radius:12px;max-width:400px;margin:auto;position:relative;">
+                <span class="close" onclick="closeModal()" style="position:absolute;top:10px;right:20px;font-size:2rem;cursor:pointer;">&times;</span>
+                <h2 id="dishName"></h2>
+                <p>Local: <a id="restaurantLink" style="color:var(--color-primary);cursor:pointer;text-decoration:underline;" onclick="showRestaurantMenu(this.dataset.restaurantId)"></a></p>
+                <p id="dishDescription"></p>
+                <p>Precio: <span id="dishPrice"></span></p>
+                <p>Alergenos: <span id="dishAllergens"></span></p>
+                <label for="suggestions" style="margin-top:1rem;display:block;">Sugerencias (ej. quitar ingrediente por alergia, término de la carne):</label>
+                <textarea id="suggestions" rows="3" style="width:100%;margin-bottom:1rem;"></textarea>
+                <button id="addWithSuggestion" onclick="addToCartWithSuggestion()" class="btn-primary" style="width:100%;"><i class="fas fa-plus"></i> Agregar al carrito</button>
+              </div>
+            </div>
         </div>
 
         <div id="eventsView" style="display: none;">
@@ -192,9 +207,9 @@
             <div class="footer-section">
                 <h3>Síguenos</h3>
                 <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://www.facebook.com/share/1CYem5AGeo/"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/la.comarcagastropark?igsh=bW43MHB0OG9yMG8y"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.tiktok.com/@la.comarcagastropark?_t=ZM-8z8TOSBnnGv&_r=1"><i class="fab fa-tiktok"></i></a>
                 </div>
             </div>
         </div>
@@ -204,6 +219,6 @@
     </footer>
 
     <script src="js/scripts.js"></script>
-    
+
 </body>
 </html>
