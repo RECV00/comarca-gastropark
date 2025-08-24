@@ -391,24 +391,25 @@ function filterRestaurantes(tipo) {
 function renderMenu(menuItems) {
   if (!menuGrid) return;
   if (menuItems.length === 0) {
-    menuGrid.innerHTML = `<div class="no-items">No hay productos disponibles</div>`;
+    menuGrid.innerHTML = `<div class=\"no-items\">No hay productos disponibles</div>`;
     return;
   }
   menuGrid.innerHTML = menuItems
     .map(
       (item) => `
-      <div class="menu-item">
-        <div class="item-image-container">
-          <img src="${item.image}" alt="${item.name}" loading="lazy">
+      <div class=\"menu-item\">
+        <div class=\"item-image-container\">
+          <img src=\"${item.image}\" alt=\"${item.name}\" loading=\"lazy\">
         </div>
-        <div class="item-info">
+        <div class=\"item-info\">
           <h3>${item.name}</h3>
-          <div class="item-description">${item.description}</div>
-          <div class="item-details">
-            <span class="item-price">₡${(item.price * 650).toLocaleString()}</span>
+          <div style=\"font-size:0.95em;color:var(--color-secondary);margin-bottom:0.3rem;\">${item.restaurantName}</div>
+          <div class=\"item-description\">${item.description}</div>
+          <div class=\"item-details\">
+            <span class=\"item-price\">₡${(item.price * 650).toLocaleString()}</span>
           </div>
-          <div class="item-actions">
-            <button class="add-to-cart" onclick="addToCart(${item.id})"><i class="fas fa-plus"></i> Agregar</button>
+          <div class=\"item-actions\">
+            <button class=\"add-to-cart\" onclick=\"showDishModal(${item.id})\"><i class=\"fas fa-eye\"></i> Ver</button>
           </div>
         </div>
       </div>
@@ -417,46 +418,63 @@ function renderMenu(menuItems) {
     .join("");
 }
 
-function filterMenu(category) {
-  let items = currentRestaurant ? products.filter((p) => p.restaurant === currentRestaurant) : products;
-  if (category === "todos") {
-    renderMenu(items);
-  } else {
-    renderMenu(items.filter((p) => p.category === category));
-  }
-}
-
-function addToCart(productId) {
+function showDishModal(productId) {
   const product = products.find((p) => p.id === productId);
   if (!product) return;
+  const modal = document.getElementById("dishModal");
+  document.getElementById("dishName").textContent = product.name;
+  document.getElementById("dishDescription").textContent = product.description;
+  document.getElementById("dishPrice").textContent = `₡${(product.price * 650).toLocaleString()}`;
+  const restaurantLink = document.getElementById("restaurantLink");
+  restaurantLink.textContent = product.restaurantName;
+  restaurantLink.dataset.restaurantId = product.restaurant;
+  restaurantLink.onclick = function() {
+    closeModal();
+    setTimeout(() => showRestaurantMenu(product.restaurant), 200);
+  };
+  document.getElementById("dishAllergens").textContent = product.allergens || "No especificado";
+  document.getElementById("suggestions").value = "";
+  modal.style.display = "block";
+  modal.dataset.productId = productId;
+}
 
+function closeModal() {
+  const modal = document.getElementById("dishModal");
+  modal.style.display = "none";
+}
+
+function addToCartWithSuggestion() {
+  const modal = document.getElementById("dishModal");
+  const productId = parseInt(modal.dataset.productId);
+  const suggestion = document.getElementById("suggestions").value;
+  const product = products.find((p) => p.id === productId);
+  if (!product) return;
   const existingItem = cart.find((item) => item.id === productId);
-
   if (existingItem) {
     existingItem.quantity += 1;
+    existingItem.suggestion = suggestion;
   } else {
     cart.push({
       ...product,
       quantity: 1,
+      suggestion: suggestion,
     });
   }
-
   updateCartDisplay();
   showCartNotification();
+  closeModal();
 }
 
-function adjustQuantity(productId, change) {
-  const item = cart.find((item) => item.id === productId);
-  if (!item) return;
-
-  item.quantity += change;
-  if (item.quantity <= 0) {
-    const index = cart.findIndex((i) => i.id === productId);
-    cart.splice(index, 1);
-  }
-
-  updateCartDisplay();
-}
+window.addToCart = addToCart;
+window.showRestaurantMenu = showRestaurantMenu;
+window.showAllProducts = showAllProducts;
+window.showHome = showHome;
+window.showEvents = showEvents;
+window.clearCart = clearCart;
+window.removeFromCart = removeFromCart;
+window.showDishModal = showDishModal;
+window.closeModal = closeModal;
+window.addToCartWithSuggestion = addToCartWithSuggestion;
 
 function updateCartDisplay() {
   const orderItems = document.getElementById("orderItems");
@@ -464,7 +482,7 @@ function updateCartDisplay() {
   if (!orderItems || !orderTotal) return;
 
   if (cart.length === 0) {
-    orderItems.innerHTML = `<div class="empty-cart"><p>Tu pedido está vacío</p><i class="fas fa-shopping-cart"></i></div>`;
+    orderItems.innerHTML = `<div class=\"empty-cart\"><p>Tu pedido está vacío</p><i class=\"fas fa-shopping-cart\"></i></div>`;
     orderTotal.textContent = "0.00";
     return;
   }
@@ -472,14 +490,18 @@ function updateCartDisplay() {
   orderItems.innerHTML = cart
     .map(
       (item) => `
-      <div class="order-item">
-        <span class="order-item-name">${item.name}</span>
-        <div class="quantity-selector">
-          <button class="quantity-btn" onclick="adjustQuantity(${item.id}, -1)">-</button>
-          <input type="number" class="quantity-input" value="${item.quantity}" readonly>
-          <button class="quantity-btn" onclick="adjustQuantity(${item.id}, 1)">+</button>
+      <div class=\"order-item\" style=\"background:rgba(255,255,255,0.97);border-radius:10px;padding:1rem;margin-bottom:0.7rem;box-shadow:0 2px 8px rgba(212,160,23,0.08);display:flex;flex-direction:column;\">
+        <div style=\"display:flex;justify-content:space-between;align-items:center;\">
+          <span class=\"order-item-name\" style=\"font-weight:600;color:var(--color-primary);font-size:1.1rem;\">${item.name}</span>
+          <span style=\"font-size:0.95em;color:#666;\">x${item.quantity}</span>
         </div>
-        <span class="order-item-price">₡${(item.price * 650 * item.quantity).toLocaleString()}</span>
+        <div style=\"display:flex;align-items:center;gap:0.5rem;margin-top:0.5rem;\">
+          <button class=\"quantity-btn\" style=\"background:var(--color-light);border:1px solid var(--color-terra);border-radius:50%;width:28px;height:28px;font-size:1.1rem;cursor:pointer;\" onclick=\"adjustQuantity(${item.id}, -1)\">-</button>
+          <input type=\"number\" class=\"quantity-input\" value=\"${item.quantity}\" readonly style=\"width:36px;text-align:center;border:none;background:transparent;font-size:1rem;\">
+          <button class=\"quantity-btn\" style=\"background:var(--color-light);border:1px solid var(--color-terra);border-radius:50%;width:28px;height:28px;font-size:1.1rem;cursor:pointer;\" onclick=\"adjustQuantity(${item.id}, 1)\">+</button>
+          <span class=\"order-item-price\" style=\"font-weight:bold;color:var(--color-secondary);margin-left:auto;\">₡${(item.price * 650 * item.quantity).toLocaleString()}</span>
+        </div>
+        <div style='font-size:0.95em;color:#d4a017;margin-top:6px;'>Sugerencia: ${item.suggestion && item.suggestion.trim() ? item.suggestion : "Sin sugerencias"}</div>
       </div>
     `,
     )
@@ -524,7 +546,7 @@ function showCartNotification() {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(212, 160, 23, 0.3);
     z-index: 3000;
     font-family: "Lora", serif;
-    animation: fadeIn 0.1s ease-out;
+    animation: fadeIn 0.3s ease-out;
   `;
   notification.textContent = "Producto añadido al carrito";
 
@@ -535,10 +557,13 @@ function showCartNotification() {
   }, 2000);
 }
 
-window.addToCart = addToCart;
-window.showRestaurantMenu = showRestaurantMenu;
-window.showAllProducts = showAllProducts;
-window.showHome = showHome;
-window.showEvents = showEvents;
-window.clearCart = clearCart;
-window.removeFromCart = removeFromCart;
+function adjustQuantity(productId, change) {
+  const item = cart.find((item) => item.id === productId);
+  if (!item) return;
+  item.quantity += change;
+  if (item.quantity <= 0) {
+    const index = cart.findIndex((i) => i.id === productId);
+    cart.splice(index, 1);
+  }
+  updateCartDisplay();
+}
