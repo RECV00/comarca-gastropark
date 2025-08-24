@@ -9,22 +9,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Merriweather:wght@400;700&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Replaced entire structure with the exact layout from the provided HTML -->
     <header>
-  <div class="logo-container">
-    <img src="images/logos/logo-comarca.jpg" alt="La Comarca GastroPark">
-  </div>
-  <nav>
-    <ul>
-      <li><a href="#" onclick="showHome()">Inicio</a></li>
-      <li><a href="#" onclick="showEvents()">Eventos</a></li>
-      <li><a href="#contacto">Contacto</a></li>
-    </ul>
-  </nav>
-</header>
+        <div class="logo-container">
+            <img src="images/logos/logo-comarca.jpg" alt="La Comarca GastroPark">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#" onclick="showHome()">Inicio</a></li>
+                <li><a href="#" onclick="showEvents()">Eventos</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
 
     <main>
-        <!-- Home View -->
         <div id="homeView">
             <section class="hero">
                 <h1>Bienvenidos a La Comarca GastroPark</h1>
@@ -51,8 +49,6 @@
 
             <section class="restaurantes">
                 <h2>Nuestros Restaurantes</h2>
-                
-                <!-- Filtros por tipo de cocina -->
                 <div class="filtros-restaurantes">
                     <button class="filtro-btn active" data-tipo="todos">Todos</button>
                     <button class="filtro-btn" data-tipo="bar">Bar</button>
@@ -65,23 +61,16 @@
                     <button class="filtro-btn" data-tipo="italiana">Italiana</button>
                     <button class="filtro-btn" data-tipo="postres">Postres</button>
                 </div>
-                
-                <!-- Grid de restaurantes -->
-                <div class="restaurantes-grid" id="restaurantesGrid">
-                    <!-- Los restaurantes se cargarán aquí con JavaScript -->
-                </div>
-
-                <!-- Botón para ver todos los productos -->
+                <div class="restaurantes-grid" id="restaurantesGrid"></div>
                 <div style="text-align: center; margin: 2rem 0;">
                     <button class="btn-primary" onclick="showAllProducts()">
                         <i class="fas fa-th-large"></i>
-                        Ver Todos los Productos
+                        Ver Todo
                     </button>
                 </div>
             </section>
         </div>
 
-        <!-- Menu View (Individual restaurant or all products) -->
         <div id="menuView" class="menu-page" style="display: none;">
             <div class="menu-header">
                 <button class="btn-back" onclick="showHome()">
@@ -95,7 +84,6 @@
                 </div>
             </div>
 
-            <!-- Filtros del menú -->
             <div class="menu-filters">
                 <button class="filter-btn active" data-category="todos">Todos</button>
                 <button class="filter-btn" data-category="bebidas">Bebidas</button>
@@ -104,12 +92,8 @@
                 <button class="filter-btn" data-category="postres">Postres</button>
             </div>
 
-            <!-- Grid de platillos -->
-            <div class="menu-grid" id="menuGrid">
-                <!-- Los productos se cargarán aquí con JavaScript -->
-            </div>
+            <div class="menu-grid" id="menuGrid"></div>
 
-            <!-- Resumen del pedido -->
             <div class="order-summary" id="orderSummary">
                 <div class="order-header">
                     <h2><i class="fas fa-shopping-cart"></i> Mi Pedido</h2>
@@ -117,36 +101,25 @@
                         <i class="fas fa-trash"></i> Limpiar
                     </button>
                 </div>
-                
                 <div class="order-items" id="orderItems">
                     <div class="empty-cart">
                         <p>Tu pedido está vacío</p>
                         <i class="fas fa-shopping-cart"></i>
                     </div>
                 </div>
-                
                 <div class="order-total">
-                    Total: $<span id="orderTotal">0.00</span>
+                    Total: ₡<span id="orderTotal">0.00</span>
                 </div>
-                
-                <div class="delivery-options">
-                    <div class="delivery-option">
-                        <input type="radio" id="pickup" name="delivery" value="pickup" checked>
-                        <label for="pickup">Recoger en local</label>
-                    </div>
-                    <div class="delivery-option">
-                        <input type="radio" id="delivery" name="delivery" value="delivery">
-                        <label for="delivery">Delivery (+$2.00)</label>
-                    </div>
-                </div>
-                
                 <button class="btn-primary" onclick="checkout()">
                     <i class="fas fa-check"></i> Confirmar Pedido
                 </button>
             </div>
+
+            <button id="floatingCartBtn" style="position: fixed; bottom: 40px; right: 40px; z-index: 1000; background: #ff9800; color: #fff; border: none; border-radius: 50%; width: 60px; height: 60px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-size: 2rem; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                <i class="fas fa-shopping-cart"></i>
+            </button>
         </div>
 
-        <!-- Events View -->
         <div id="eventsView" style="display: none;">
             <div class="menu-header">
                 <button class="btn-back" onclick="showHome()">
@@ -177,7 +150,6 @@
                         </div>
                     </div>
                 </div>
-                
                 <div id="week" class="tab-content">
                     <div class="eventos-grid">
                         <div class="evento-card">
@@ -192,7 +164,6 @@
                         </div>
                     </div>
                 </div>
-                
                 <div id="month" class="tab-content">
                     <div class="eventos-grid">
                         <div class="evento-card">
@@ -228,7 +199,7 @@
             </div>
         </div>
         <div class="copyright">
-            <p>&copy; 2024 La Comarca GastroPark. Todos los derechos reservados.</p>
+            <p>&copy; 2025 La Comarca GastroPark. Todos los derechos reservados.</p>
         </div>
     </footer>
 

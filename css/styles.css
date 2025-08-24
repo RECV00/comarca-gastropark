@@ -599,26 +599,32 @@ footer {
 }
 
 .add-to-cart {
-  flex-grow: 1;
-  padding: 0 1rem;
   background: var(--color-primary);
-  border-radius: 8px;
   color: white;
   border: none;
+  padding: 17px 0px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 55px;
   cursor: pointer;
-  transition: background 0.3s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  font-weight: 500;
+  width: 100%;
+  max-width: 141px;
+  margin: 0 auto;
+  display: block;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
 }
 
 .add-to-cart:hover {
   background: var(--color-secondary);
+  transform: translateY(-2px);
   box-shadow: 0 2px 6px rgba(212, 160, 23, 0.3);
 }
 
+.add-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(76, 175, 80, 0.4);
+}
 /* Resumen del pedido */
 .order-summary {
   flex: 1;
@@ -853,10 +859,84 @@ footer {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
+/* Responsive */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  nav ul {
+    margin-top: 1rem;
+  }
+
+  .hero {
+    padding: 3rem 1rem;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .eventos-destacados,
+  .restaurantes {
+    padding: 1rem;
+  }
+
+  .restaurantes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filtros-restaurantes {
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scrollbar-width: none;
+  }
+
+  .filtros-restaurantes::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filtro-btn {
+    flex-shrink: 0;
+  }
+
+  .menu-page {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .menu-grid {
+    order: 1;
+  }
+
+  .order-summary {
+    order: 2;
+    margin: 1rem auto;
+  }
+
+  #floatingCartBtn {
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .restaurantes-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+}
+
+/* Animation */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
 .restaurante-card, .menu-item, .evento-card {
   animation: fadeIn 0.5s ease-out;
 }
