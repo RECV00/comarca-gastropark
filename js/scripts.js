@@ -296,6 +296,33 @@ function setupEventListeners() {
       if (activeTab) activeTab.classList.add("active")
     })
   })
+
+  const floatingCartBtn = document.getElementById("floatingCartBtn");
+  if (floatingCartBtn) {
+    floatingCartBtn.addEventListener("click", () => {
+      // Ensure we're in the menu view
+      if (currentView !== "menu") {
+        if (currentRestaurant) {
+          showRestaurantMenu(currentRestaurant);
+        } else {
+          showAllProducts();
+        }
+        // Use a slight delay to ensure DOM is updated
+        setTimeout(() => {
+          const orderSummary = document.getElementById("orderSummary");
+          if (orderSummary) {
+            orderSummary.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }, 100);
+      } else {
+        // Already in menu view, just scroll
+        const orderSummary = document.getElementById("orderSummary");
+        if (orderSummary) {
+          orderSummary.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    });
+  }
 }
 
 function showHome() {
@@ -415,51 +442,67 @@ function filterMenu(category) {
 }
 
 function addToCart(productId) {
-  const product = products.find((p) => p.id === productId)
-  if (!product) return
+  const product = products.find((p) => p.id === productId);
+  if (!product) return;
 
-  const existingItem = cart.find((item) => item.id === productId)
+  const existingItem = cart.find((item) => item.id === productId);
 
   if (existingItem) {
-    existingItem.quantity += 1
+    existingItem.quantity += 1;
   } else {
     cart.push({
       ...product,
       quantity: 1,
-    })
+    });
   }
 
-  updateCartDisplay()
-  showCartNotification()
+  updateCartDisplay();
+  showCartNotification();
+}
+
+function adjustQuantity(productId, change) {
+  const item = cart.find((item) => item.id === productId);
+  if (!item) return;
+
+  item.quantity += change;
+  if (item.quantity <= 0) {
+    const index = cart.findIndex((i) => i.id === productId);
+    cart.splice(index, 1);
+  }
+
+  updateCartDisplay();
+  showCartNotification();
 }
 
 function updateCartDisplay() {
-  const orderItems = document.getElementById("orderItems")
-  const orderTotal = document.getElementById("orderTotal")
-  if (!orderItems || !orderTotal) return
+  const orderItems = document.getElementById("orderItems");
+  const orderTotal = document.getElementById("orderTotal");
+  if (!orderItems || !orderTotal) return;
 
   if (cart.length === 0) {
-    orderItems.innerHTML = `<div class="empty-cart"><p>Tu pedido está vacío</p><i class="fas fa-shopping-cart"></i></div>`
-    orderTotal.textContent = "0.00"
-    return
+    orderItems.innerHTML = `<div class="empty-cart"><p>Tu pedido está vacío</p><i class="fas fa-shopping-cart"></i></div>`;
+    orderTotal.textContent = "0.00";
+    return;
   }
 
   orderItems.innerHTML = cart
     .map(
       (item) => `
       <div class="order-item">
-        <span class="order-item-name">${item.name} (${item.quantity})</span>
-        <span class="order-item-price">₡${(item.price * 650 * item.quantity).toLocaleString()}</span>
-        <div class="order-item-actions">
-          <button class="btn-remove-item" onclick="removeFromCart(${item.id})">Eliminar</button>
+        <span class="order-item-name">${item.name}</span>
+        <div class="quantity-selector">
+          <button class="quantity-btn" onclick="adjustQuantity(${item.id}, -1)">-</button>
+          <input type="number" class="quantity-input" value="${item.quantity}" readonly>
+          <button class="quantity-btn" onclick="adjustQuantity(${item.id}, 1)">+</button>
         </div>
+        <span class="order-item-price">₡${(item.price * 650 * item.quantity).toLocaleString()}</span>
       </div>
     `,
     )
-    .join("")
+    .join("");
 
-  const total = cart.reduce((sum, item) => sum + item.price * 650 * item.quantity, 0)
-  orderTotal.textContent = total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+  const total = cart.reduce((sum, item) => sum + item.price * 650 * item.quantity, 0);
+  orderTotal.textContent = total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 function clearCart() {
