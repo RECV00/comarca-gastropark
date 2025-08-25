@@ -391,25 +391,25 @@ function filterRestaurantes(tipo) {
 function renderMenu(menuItems) {
   if (!menuGrid) return;
   if (menuItems.length === 0) {
-    menuGrid.innerHTML = `<div class=\"no-items\">No hay productos disponibles</div>`;
+    menuGrid.innerHTML = `<div class="no-items">No hay productos disponibles</div>`;
     return;
   }
   menuGrid.innerHTML = menuItems
     .map(
       (item) => `
-      <div class=\"menu-item\">
-        <div class=\"item-image-container\">
-          <img src=\"${item.image}\" alt=\"${item.name}\" loading=\"lazy\">
+      <div class="menu-item">
+        <div class="item-image-container">
+          <img src="${item.image}" alt="${item.name}" loading="lazy">
+          <span class="badge-restaurante">${item.restaurantName}</span>
         </div>
-        <div class=\"item-info\">
+        <div class="item-info">
           <h3>${item.name}</h3>
-          <div style=\"font-size:0.95em;color:var(--color-secondary);margin-bottom:0.3rem;\">${item.restaurantName}</div>
-          <div class=\"item-description\">${item.description}</div>
-          <div class=\"item-details\">
-            <span class=\"item-price\">₡${(item.price * 650).toLocaleString()}</span>
+          <div class="item-description">${item.description}</div>
+          <div class="item-details">
+            <span class="item-price">₡${(item.price * 650).toLocaleString()}</span>
           </div>
-          <div class=\"item-actions\">
-            <button class=\"add-to-cart\" onclick=\"showDishModal(${item.id})\"><i class=\"fas fa-eye\"></i> Ver</button>
+          <div class="item-actions">
+            <button class="add-to-cart" onclick="showDishModal(${item.id})"><i class="fas fa-eye"></i> Ver</button>
           </div>
         </div>
       </div>
