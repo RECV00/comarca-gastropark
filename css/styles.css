@@ -8,6 +8,8 @@
   --color-accent: #D4A017; /* Golden Wheat */
   --color-text: #3C2F2F; /* Dark Brown for text */
   --color-bg: #FDF6E3; /* Warm Off-White background */
+  --color-musgo: #232c0c; /* Dark Olive Green */
+  --color-naranja:#e79a0ca7; /* Naranja suave */
 }
 
 /* Estilos generales */
@@ -19,23 +21,33 @@
 }
 
 body {
-  background-color: var(--color-bg);
+  background-color: var(--color-ng);
   color: var(--color-text);
   line-height: 1.8;
   background-size: cover;
   background-attachment: fixed;
+  margin-top: 50%; /* Adjust for fixed header height no se monte la imagen a los eventos*/
 }
 
 /* Header (unchanged from previous response) */
 header {
-  background-color: var(--color-bg);
+  /* background-color: var(--color-terra); */
+  background-image: url('../images/logos/logo-madera2.jpg');
+  /* /background-repeat: no-repeat; */
+  /* background-size: cover; */
+  /* background-position: center;  */
+  position: fixed;
+  top:0;
+  width: 100%;
+  z-index: 1000;
   color: white;
   padding: 2rem 2rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
+  background-attachment:scroll;
 }
 
 .logo-container {
@@ -48,11 +60,8 @@ header {
   height: 150px;
   object-fit: contain;
   transition: transform 0.3s ease;
-  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
-}
-
-.logo-container img:hover {
-  transform: scale(1.05);
+  filter: drop-shadow(0 3px 6px rgba(255, 255, 255, 0.664));
+  
 }
 
 nav ul {
@@ -68,12 +77,13 @@ nav ul li {
 }
 
 nav ul li a {
-  color: black;
+  color: white;
   text-decoration: none;
   font-weight: 500;
   font-size: 1.2rem;
   padding: 0.5rem 1rem;
   transition: color 0.3s, background-color 0.3s;
+  
 }
 
 nav ul li a:hover {
@@ -133,7 +143,8 @@ nav ul li a:hover {
 .hero {
   text-align: center;
   padding: 5rem 2rem;
-  background-image: url('../images/logos/logo-madera2.jpg');
+  background:var(--color-musgo);
+  /* background-image: url('../images/logos/logo-madera.jpg'); */
   color: white;
   border-bottom: 5px solid var(--color-light);
 }
@@ -156,8 +167,7 @@ nav ul li a:hover {
 /* Eventos destacados */
 .eventos-destacados {
   padding: 3rem 2rem;
-  background: var(--color-light);
-  background-image: url('images/textures/parchment.jpg'); /* Parchment texture */
+  background: var(--color-bg);
   border-radius: 10px;
   margin: 2rem auto;
   max-width: 1400px;
@@ -177,7 +187,7 @@ nav ul li a:hover {
 }
 
 .evento-card {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(208, 174, 143, 0.555);
   margin: 22px;
   padding: 2rem;
   border-radius: 12px;
@@ -200,7 +210,6 @@ nav ul li a:hover {
   padding: 3rem 2rem;
   max-width: 1400px;
   margin: 0 auto;
-  background: url('images/textures/burlap.jpg'); /* Burlap texture */
   border-radius: 10px;
 }
 
@@ -351,9 +360,71 @@ nav ul li a:hover {
   box-shadow: 0 2px 6px rgba(212, 160, 23, 0.3);
 }
 
+/* Reseñas */
+.reviews-section {
+  padding: 1rem;
+  border-top: 1px solid var(--color-terra);
+  margin-top: 1rem;
+}
+
+.reviews-section h4 {
+  font-family: "Merriweather", serif;
+  color: var(--color-primary);
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.review {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  border: 1px solid var(--color-light);
+}
+
+.review-rating {
+  color: var(--color-accent);
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.review-comment {
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.review-date {
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: 0.25rem;
+}
+
+.btn-add-review {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: var(--color-naranja);
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  transition: background 0.3s;
+}
+
+.btn-add-review:hover {
+  background: var(--color-secondary);
+}
+
+.btn-add-review:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
 /* Footer */
 footer {
-  background: var(--color-dark);
+  /* background: var(--color-dark); */
+  background-image: url('../images/logos/logo-madera2.jpg');
   color: white;
   padding: 4rem 2rem 2rem;
   border-top: 5px solid var(--color-secondary);
@@ -398,56 +469,6 @@ footer {
   text-align: center;
   padding-top: 1rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  header {
-    flex-direction: column;
-    padding: 1rem;
-  }
-
-  nav ul {
-    margin-top: 1rem;
-  }
-
-  .hero {
-    padding: 3rem 1rem;
-  }
-
-  .hero h1 {
-    font-size: 2rem;
-  }
-
-  .eventos-destacados,
-  .restaurantes {
-    padding: 1rem;
-  }
-
-  .restaurantes-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .filtros-restaurantes {
-    justify-content: flex-start;
-    overflow-x: auto;
-    padding-bottom: 0.5rem;
-    scrollbar-width: none;
-  }
-
-  .filtros-restaurantes::-webkit-scrollbar {
-    display: none;
-  }
-
-  .filtro-btn {
-    flex-shrink: 0;
-  }
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {
-  .restaurantes-grid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  }
 }
 
 /* Estilos específicos para la página de menú */
@@ -582,6 +603,23 @@ footer {
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: bold;
+}
+
+.badge-restaurante {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--color-secondary);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border: 1px solid var(--color-light);
+  white-space: nowrap;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .item-info {
@@ -1035,28 +1073,27 @@ footer {
   display: block;
 }
 
-/* Responsive para página de menú */
-@media (max-width: 768px) {
-  .menu-page {
-    flex-direction: column;
-    padding: 1rem;
-  }
-
-  .menu-grid {
-    order: 2;
-  }
-
-  .order-summary {
-    order: 1;
-    position: static;
-    margin-bottom: 2rem;
-    width: 100%;
-  }
+.restaurante-card, .menu-item, .evento-card {
+  animation: fadeIn 0.5s ease-out;
 }
 
 /* Notification */
 .cart-notification {
   animation: fadeIn 0.1s ease-out;
+}
+
+.restaurante-card, .menu-item, .evento-card {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.cart-notification {
+  animation: fadeIn 0.1s ease-out;
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .restaurantes-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
 }
 
 /* Responsive */
@@ -1067,20 +1104,32 @@ header {
 }
 
 nav ul {
-  margin-top: 1.5rem;
-  flex-direction: column;
+  margin-top: -1rem;
+  display: flex;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 0.5rem 0;
+  scrollbar-width: none; 
   gap: 1rem;
 }
 
+nav ul::-webkit-scrollbar {
+  display: none; /* Oculta la barra de desplazamiento en Chrome/Safari */
+}
+
 nav ul li a {
-  font-size: 1.1rem;
-  padding: 0.5rem;
+  font-size: 1rem;
+  padding: 0.4rem 0.8rem;
+  white-space: nowrap; /* Prevent text wrapping */
 }
 
 .logo-container img {
-  width: 400px;
-  height: 150px;
+  width: 250px;
+  height: auto;
+  max-width: 80%;
 }
 .hero {
   padding: 3rem 1rem;
@@ -1161,6 +1210,12 @@ nav ul li a {
   height: 50px;
   font-size: 1.5rem;
 }
+
+.badge-restaurante {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+    max-width: 100px;
+  }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
@@ -1171,6 +1226,10 @@ nav ul li a {
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
+
+  .restaurantes-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
   .logo-container img {
     width: 400px;
     height: 150px;
@@ -1205,7 +1264,4 @@ nav ul li a {
 @keyframes slideInModal {
   from { transform: scale(0.95); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
-}
-.restaurante-card, .menu-item, .evento-card {
-  animation: fadeIn 0.5s ease-out;
 }
