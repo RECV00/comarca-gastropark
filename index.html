@@ -119,19 +119,46 @@
                 <i class="fas fa-shopping-cart"></i>
             </button>
 
-            <!-- New modal for dish details -->
-            <div id="dishModal" class="modal" style="display:none;position:fixed;z-index:4000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);align-items:center;justify-content:center;">
-              <div class="modal-content" style="background:#fff;padding:2rem;border-radius:12px;max-width:400px;margin:auto;position:relative;">
-                <span class="close" onclick="closeModal()" style="position:absolute;top:10px;right:20px;font-size:2rem;cursor:pointer;">&times;</span>
-                <h2 id="dishName"></h2>
-                <p>Local: <a id="restaurantLink" style="color:var(--color-primary);cursor:pointer;text-decoration:underline;" onclick="showRestaurantMenu(this.dataset.restaurantId)"></a></p>
-                <p id="dishDescription"></p>
-                <p>Precio: <span id="dishPrice"></span></p>
-                <p>Alergenos: <span id="dishAllergens"></span></p>
-                <label for="suggestions" style="margin-top:1rem;display:block;">Sugerencias (ej. quitar ingrediente por alergia, término de la carne):</label>
-                <textarea id="suggestions" rows="3" style="width:100%;margin-bottom:1rem;"></textarea>
-                <button id="addWithSuggestion" onclick="addToCartWithSuggestion()" class="btn-primary" style="width:100%;"><i class="fas fa-plus"></i> Agregar al carrito</button>
-              </div>
+            <!-- Modal for dish details -->
+            <div id="dishModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    <h2 id="dishName"></h2>
+                    <p>Local: <a id="restaurantLink"></a></p>
+                    <p id="dishDescription"></p>
+                    <p>Precio: <span id="dishPrice"></span></p>
+                    <p>Alergenos: <span id="dishAllergens"></span></p>
+                    <label for="suggestions">Sugerencias (ej. quitar ingrediente por alergia, término de la carne):</label>
+                    <textarea id="suggestions" rows="3"></textarea>
+                    <button id="addWithSuggestion" onclick="addToCartWithSuggestion()">
+                        <i class="fas fa-plus"></i> Agregar al carrito
+                    </button>
+                    <div class="reviews-section">
+                        <h4>Reseñas</h4>
+                        <div id="dishReviews"></div>
+                        <button class="btn-add-review" id="addDishReviewBtn" onclick="showReviewModal('dish')">Añadir Reseña</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal for adding reviews -->
+            <div id="reviewModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeReviewModal()">&times;</span>
+                    <h2 id="reviewModalTitle">Añadir Reseña</h2>
+                    <p id="reviewModalSubtitle"></p>
+                    <label for="reviewRating">Puntuación:</label>
+                    <select id="reviewRating">
+                        <option value="5">5 ⭐</option>
+                        <option value="4">4 ⭐</option>
+                        <option value="3">3 ⭐</option>
+                        <option value="2">2 ⭐</option>
+                        <option value="1">1 ⭐</option>
+                    </select>
+                    <label for="reviewComment">Comentario:</label>
+                    <textarea id="reviewComment" rows="4"></textarea>
+                    <button id="submitReview" onclick="submitReview()">Enviar Reseña</button>
+                </div>
             </div>
         </div>
 

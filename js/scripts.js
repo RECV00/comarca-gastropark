@@ -1,3 +1,4 @@
+// Datos de restaurantes
 const restaurants = [
   {
     id: "el-barril",
@@ -64,6 +65,7 @@ const restaurants = [
   },
 ];
 
+// Datos de productos
 const products = [
   {
     id: 1,
@@ -187,6 +189,7 @@ const products = [
   },
 ];
 
+// Datos de eventos
 const events = {
   today: [
     {
@@ -231,9 +234,16 @@ const events = {
   ],
 };
 
+// Array para almacenar reseñas
+let reviews = [];
+
+// Array para el carrito
 const cart = [];
 let currentView = "home";
 let currentRestaurant = null;
+let confirmedOrders = []; // Simula pedidos confirmados
+let currentReviewType = null; // 'restaurant' o 'dish'
+let currentReviewId = null; // ID del restaurante o platillo para la reseña
 
 const homeView = document.getElementById("homeView");
 const menuView = document.getElementById("menuView");
@@ -256,6 +266,7 @@ function initializeApp() {
 document.addEventListener("DOMContentLoaded", initializeApp);
 
 function setupEventListeners() {
+  // Filtros de restaurantes
   document.querySelectorAll(".filtro-btn").forEach((button) => {
     button.addEventListener("click", () => {
       document.querySelectorAll(".filtro-btn").forEach((btn) => btn.classList.remove("active"));
@@ -264,6 +275,7 @@ function setupEventListeners() {
     });
   });
 
+  // Filtros de menú
   document.querySelectorAll(".filter-btn").forEach((button) => {
     button.addEventListener("click", () => {
       document.querySelectorAll(".filter-btn").forEach((btn) => btn.classList.remove("active"));
@@ -272,6 +284,7 @@ function setupEventListeners() {
     });
   });
 
+  // Pestañas de eventos
   document.querySelectorAll(".tab-btn").forEach((button) => {
     button.addEventListener("click", () => {
       document.querySelectorAll(".tab-btn").forEach((btn) => btn.classList.remove("active"));
@@ -285,6 +298,7 @@ function setupEventListeners() {
     });
   });
 
+  // Botón flotante del carrito
   const floatingCartBtn = document.getElementById("floatingCartBtn");
   if (floatingCartBtn) {
     floatingCartBtn.addEventListener("click", () => {
@@ -373,6 +387,18 @@ function renderRestaurantes(restaurantes) {
           </div>
           <div class="descripcion">${r.description}</div>
           <button class="btn-visitar" onclick="showRestaurantMenu('${r.id}')">Ver Menú</button>
+          <div class="reviews-section">
+            <h4>Reseñas</h4>
+            <div id="reviews-${r.id}">
+              ${renderReviews('restaurant', r.id)}
+            </div>
+            <button class="btn-add-review" onclick="showReviewModal('restaurant', '${r.id}')" 
+                    ${canReview('restaurant', r.id) ? '' : 'disabled'}
+                    title="${canReview('restaurant', r.id) ? '' : 'Debes realizar un pedido para dejar una reseña'}">
+              Añadir Reseña
+            </button>
+            ${!canReview('restaurant', r.id) ? '<div style="color:#d9534f;font-size:0.85rem;margin-top:0.3rem;">Debes realizar un pedido para dejar una reseña.</div>' : ''}
+          </div>
         </div>
       </div>
     `,
@@ -418,6 +444,16 @@ function renderMenu(menuItems) {
     .join("");
 }
 
+function filterMenu(category) {
+  let filteredItems = currentRestaurant
+    ? products.filter((p) => p.restaurant === currentRestaurant)
+    : products;
+  if (category !== "todos") {
+    filteredItems = filteredItems.filter((p) => p.category === category);
+  }
+  renderMenu(filteredItems);
+}
+
 function showDishModal(productId) {
   const product = products.find((p) => p.id === productId);
   if (!product) return;
@@ -434,6 +470,26 @@ function showDishModal(productId) {
   };
   document.getElementById("dishAllergens").textContent = product.allergens || "No especificado";
   document.getElementById("suggestions").value = "";
+  const dishReviews = document.getElementById("dishReviews");
+  dishReviews.innerHTML = renderReviews('dish', productId);
+  const addDishReviewBtn = document.getElementById("addDishReviewBtn");
+  addDishReviewBtn.disabled = !canReview('dish', productId);
+  addDishReviewBtn.title = !canReview('dish', productId) ? 'Debes realizar un pedido para dejar una reseña' : '';
+  addDishReviewBtn.onclick = function() { showReviewModal('dish', productId); };
+  if (!canReview('dish', productId)) {
+    if (!document.getElementById('dishReviewMsg')) {
+      const msg = document.createElement('div');
+      msg.id = 'dishReviewMsg';
+      msg.style.color = '#d9534f';
+      msg.style.fontSize = '0.85rem';
+      msg.style.marginTop = '0.3rem';
+      msg.textContent = 'Debes realizar un pedido para dejar una reseña.';
+      addDishReviewBtn.parentNode.appendChild(msg);
+    }
+  } else {
+    const msg = document.getElementById('dishReviewMsg');
+    if (msg) msg.remove();
+  }
   modal.style.display = "block";
   modal.dataset.productId = productId;
 }
@@ -441,6 +497,90 @@ function showDishModal(productId) {
 function closeModal() {
   const modal = document.getElementById("dishModal");
   modal.style.display = "none";
+}
+
+function showReviewModal(type, id) {
+  if (!canReview(type, id)) {
+    showNotification("Debes haber realizado un pedido para dejar una reseña.");
+    return;
+  }
+  currentReviewType = type;
+  currentReviewId = id;
+  const modal = document.getElementById("reviewModal");
+  const title = document.getElementById("reviewModalTitle");
+  const subtitle = document.getElementById("reviewModalSubtitle");
+  if (type === 'restaurant') {
+    const restaurant = restaurants.find((r) => r.id === id);
+    title.textContent = `Añadir Reseña para ${restaurant.name}`;
+    subtitle.textContent = `Comparte tu experiencia en ${restaurant.name}`;
+  } else {
+    const product = products.find((p) => p.id === parseInt(id));
+    title.textContent = `Añadir Reseña para ${product.name}`;
+    subtitle.textContent = `¿Qué te pareció ${product.name}?`;
+  }
+  document.getElementById("reviewRating").value = "5";
+  document.getElementById("reviewComment").value = "";
+  modal.style.display = "block";
+}
+
+function closeReviewModal() {
+  const modal = document.getElementById("reviewModal");
+  modal.style.display = "none";
+  currentReviewType = null;
+  currentReviewId = null;
+}
+
+function submitReview() {
+  const rating = parseInt(document.getElementById("reviewRating").value);
+  const comment = document.getElementById("reviewComment").value.trim();
+  if (!comment) {
+    showNotification("Por favor, escribe un comentario para la reseña.");
+    return;
+  }
+  const review = {
+    id: reviews.length + 1,
+    userId: "guest", // Simulado, en una app real sería el ID del usuario autenticado
+    rating: rating,
+    comment: comment,
+    date: new Date().toLocaleDateString('es-ES'),
+    type: currentReviewType,
+    [currentReviewType === 'restaurant' ? 'restaurantId' : 'productId']: currentReviewType === 'restaurant' ? currentReviewId : parseInt(currentReviewId),
+  };
+  reviews.push(review);
+  closeReviewModal();
+  showNotification("Reseña enviada con éxito.");
+  if (currentReviewType === 'restaurant') {
+    renderRestaurantes(restaurants);
+  } else {
+    showDishModal(currentReviewId);
+  }
+}
+
+function renderReviews(type, id) {
+  const filteredReviews = reviews.filter((r) => r.type === type && (type === 'restaurant' ? r.restaurantId === id : r.productId === parseInt(id)));
+  if (filteredReviews.length === 0) {
+    return `<p style="color: #666; font-size: 0.85rem;">No hay reseñas disponibles.</p>`;
+  }
+  return filteredReviews
+    .map(
+      (r) => `
+      <div class="review">
+        <div class="review-rating">${'⭐'.repeat(r.rating)}</div>
+        <div class="review-comment">${r.comment}</div>
+        <div class="review-date">Por Cliente Anónimo - ${r.date}</div>
+      </div>
+    `,
+    )
+    .join("");
+}
+
+function canReview(type, id) {
+  // Verifica si el usuario tiene un pedido confirmado para el restaurante o platillo
+  if (type === 'restaurant') {
+    return confirmedOrders.some((order) => products.find((p) => p.id === order.productId && p.restaurant === id));
+  } else {
+    return confirmedOrders.some((order) => order.productId === parseInt(id));
+  }
 }
 
 function addToCartWithSuggestion() {
@@ -465,16 +605,18 @@ function addToCartWithSuggestion() {
   closeModal();
 }
 
-window.addToCart = addToCart;
-window.showRestaurantMenu = showRestaurantMenu;
-window.showAllProducts = showAllProducts;
-window.showHome = showHome;
-window.showEvents = showEvents;
-window.clearCart = clearCart;
-window.removeFromCart = removeFromCart;
-window.showDishModal = showDishModal;
-window.closeModal = closeModal;
-window.addToCartWithSuggestion = addToCartWithSuggestion;
+function checkout() {
+  if (cart.length === 0) {
+    showNotification("El carrito está vacío.");
+    return;
+  }
+  // Simula la confirmación del pedido
+  cart.forEach((item) => {
+    confirmedOrders.push({ productId: item.id });
+  });
+  showNotification("Pedido confirmado. Ahora puedes dejar reseñas para los productos y restaurantes.");
+  clearCart();
+}
 
 function updateCartDisplay() {
   const orderItems = document.getElementById("orderItems");
@@ -482,7 +624,7 @@ function updateCartDisplay() {
   if (!orderItems || !orderTotal) return;
 
   if (cart.length === 0) {
-    orderItems.innerHTML = `<div class=\"empty-cart\"><p>Tu pedido está vacío</p><i class=\"fas fa-shopping-cart\"></i></div>`;
+    orderItems.innerHTML = `<div class="empty-cart"><p>Tu pedido está vacío</p><i class="fas fa-shopping-cart"></i></div>`;
     orderTotal.textContent = "0.00";
     return;
   }
@@ -490,18 +632,18 @@ function updateCartDisplay() {
   orderItems.innerHTML = cart
     .map(
       (item) => `
-      <div class=\"order-item\" style=\"background:rgba(255,255,255,0.97);border-radius:10px;padding:1rem;margin-bottom:0.7rem;box-shadow:0 2px 8px rgba(212,160,23,0.08);display:flex;flex-direction:column;\">
-        <div style=\"display:flex;justify-content:space-between;align-items:center;\">
-          <span class=\"order-item-name\" style=\"font-weight:600;color:var(--color-primary);font-size:1.1rem;\">${item.name}</span>
-          <span style=\"font-size:0.95em;color:#666;\">x${item.quantity}</span>
+      <div class="order-item" style="background:rgba(255,255,255,0.97);border-radius:10px;padding:1rem;margin-bottom:0.7rem;box-shadow:0 2px 8px rgba(212,160,23,0.08);display:flex;flex-direction:column;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="order-item-name" style="font-weight:600;color:var(--color-primary);font-size:1.1rem;">${item.name}</span>
+          <span style="font-size:0.95em;color:#666;">x${item.quantity}</span>
         </div>
-        <div style=\"display:flex;align-items:center;gap:0.5rem;margin-top:0.5rem;\">
-          <button class=\"quantity-btn\" style=\"background:var(--color-light);border:1px solid var(--color-terra);border-radius:50%;width:28px;height:28px;font-size:1.1rem;cursor:pointer;\" onclick=\"adjustQuantity(${item.id}, -1)\">-</button>
-          <input type=\"number\" class=\"quantity-input\" value=\"${item.quantity}\" readonly style=\"width:36px;text-align:center;border:none;background:transparent;font-size:1rem;\">
-          <button class=\"quantity-btn\" style=\"background:var(--color-light);border:1px solid var(--color-terra);border-radius:50%;width:28px;height:28px;font-size:1.1rem;cursor:pointer;\" onclick=\"adjustQuantity(${item.id}, 1)\">+</button>
-          <span class=\"order-item-price\" style=\"font-weight:bold;color:var(--color-secondary);margin-left:auto;\">₡${(item.price * 650 * item.quantity).toLocaleString()}</span>
+        <div style="display:flex;align-items:center;gap:0.5rem;margin-top:0.5rem;">
+          <button class="quantity-btn" style="background:var(--color-light);border:1px solid var(--color-terra);border-radius:50%;width:28px;height:28px;font-size:1.1rem;cursor:pointer;" onclick="adjustQuantity(${item.id}, -1)">-</button>
+          <input type="number" class="quantity-input" value="${item.quantity}" readonly style="width:36px;text-align:center;border:none;background:transparent;font-size:1rem;">
+          <button class="quantity-btn" style="background:var(--color-light);border:1px solid var(--color-terra);border-radius:50%;width:28px;height:28px;font-size:1.1rem;cursor:pointer;" onclick="adjustQuantity(${item.id}, 1)">+</button>
+          <span class="order-item-price" style="font-weight:bold;color:var(--color-secondary);margin-left:auto;">₡${(item.price * 650 * item.quantity).toLocaleString()}</span>
         </div>
-        <div style='font-size:0.95em;color:#d4a017;margin-top:6px;'>Sugerencia: ${item.suggestion && item.suggestion.trim() ? item.suggestion : "Sin sugerencias"}</div>
+        <div style="font-size:0.95em;color:#d4a017;margin-top:6px;">Sugerencia: ${item.suggestion && item.suggestion.trim() ? item.suggestion : "Sin sugerencias"}</div>
       </div>
     `,
     )
@@ -525,7 +667,6 @@ function removeFromCart(productId) {
 }
 
 function showCartNotification() {
-  // Remove any existing notification
   const existingNotification = document.querySelector(".cart-notification");
   if (existingNotification) {
     existingNotification.remove();
@@ -557,6 +698,38 @@ function showCartNotification() {
   }, 2000);
 }
 
+function showNotification(message) {
+  const existingNotification = document.querySelector(".cart-notification");
+  if (existingNotification) {
+    existingNotification.remove();
+  }
+
+  const notification = document.createElement("div");
+  notification.className = "cart-notification";
+  notification.style.cssText = `
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--color-primary);
+    color: var(--color-light);
+    padding: 1.2rem 2.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--color-terra);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(212, 160, 23, 0.3);
+    z-index: 3000;
+    font-family: "Lora", serif;
+    animation: fadeIn 0.3s ease-out;
+  `;
+  notification.textContent = message;
+
+  document.body.appendChild(notification);
+
+  setTimeout(() => {
+    notification.remove();
+  }, 2000);
+}
+
 function adjustQuantity(productId, change) {
   const item = cart.find((item) => item.id === productId);
   if (!item) return;
@@ -567,3 +740,19 @@ function adjustQuantity(productId, change) {
   }
   updateCartDisplay();
 }
+
+// Exponer funciones al ámbito global
+window.addToCartWithSuggestion = addToCartWithSuggestion;
+window.showRestaurantMenu = showRestaurantMenu;
+window.showAllProducts = showAllProducts;
+window.showHome = showHome;
+window.showEvents = showEvents;
+window.clearCart = clearCart;
+window.removeFromCart = removeFromCart;
+window.showDishModal = showDishModal;
+window.closeModal = closeModal;
+window.showReviewModal = showReviewModal;
+window.closeReviewModal = closeReviewModal;
+window.submitReview = submitReview;
+window.checkout = checkout;
+window.adjustQuantity = adjustQuantity;
