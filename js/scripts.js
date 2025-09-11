@@ -457,12 +457,11 @@ function addToCartWithSuggestion() {
   closeModal();
 }
 
+// La función updateCartDisplay solo muestra productos en el carrito actual, no pedidos confirmados
 function updateCartDisplay() {
   const orderItems = document.getElementById("orderItems");
   const orderTotal = document.getElementById("orderTotal");
-  
   if (!orderItems || !orderTotal) return;
-
   if (cart.length === 0) {
     orderItems.innerHTML = `
       <div class="empty-cart">
@@ -473,7 +472,6 @@ function updateCartDisplay() {
     orderTotal.textContent = "0.00";
     return;
   }
-
   orderItems.innerHTML = cart
     .map((item, index) => `
       <div class="order-item">
@@ -495,7 +493,6 @@ function updateCartDisplay() {
       </div>
     `)
     .join("");
-
   const total = cart.reduce((sum, item) => sum + item.price * 650 * item.quantity, 0);
   orderTotal.textContent = total.toLocaleString();
 }
@@ -505,6 +502,7 @@ function showCartNotification() {
   notification.className = "cart-notification";
   notification.textContent = "¡Producto agregado al carrito!";
   document.body.appendChild(notification);
+
   setTimeout(() => {
     notification.remove();
   }, 2000);
@@ -512,4 +510,198 @@ function showCartNotification() {
 
 function adjustQuantity(productId, change) {
   const item = cart.find((item) => item.id === productId);
-  if
+  if (item) {
+    item.quantity += change;
+    if (item.quantity <= 0) {
+      const index = cart.findIndex((i) => i.id === productId);
+      cart.splice(index, 1);
+    }
+    updateCartDisplay();
+    showCartNotification();
+  }
+}
+
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  updateCartDisplay();
+  showCartNotification();
+}
+
+function showNotification(message, type = "success") {
+  const notification = document.createElement("div");
+  notification.className = "cart-notification";
+  notification.textContent = message;
+  if (type === "error") {
+    notification.style.background = "#d9534f";
+  }
+  document.body.appendChild(notification);
+
+  setTimeout(() => {
+    notification.remove();
+  }, 3000);
+}
+
+function clearCart() {
+  cart.length = 0;
+  updateCartDisplay();
+  showNotification("Carrito vaciado.");
+}
+
+function checkout() {
+  if (cart.length === 0) {
+    showNotification("El carrito está vacío.", "error");
+    return;
+  }
+  let orderNumber;
+  do {
+    orderNumber = Math.floor(1000 + Math.random() * 9000).toString();
+  } while (confirmedOrders.some(order => order.orderNumber === orderNumber));
+  lastOrderNumber = orderNumber;
+  const timestamp = new Date();
+  cart.forEach((item) => {
+    confirmedOrders.push({
+      orderNumber: orderNumber,
+      productId: item.id,
+      status: "Recibido",
+      timestamp: timestamp,
+      restaurant: item.restaurant,
+      quantity: item.quantity
+    });
+  });
+  simulateOrderStatusUpdates(orderNumber);
+  showNotification(`¡Pedido confirmado! Tu número de orden es: ${orderNumber}. Usa este número para recoger tu pedido.`);
+  clearCart();
+  updateOrderStatusDisplay();
+  updateOrderNumberDisplay();
+}
+
+function updateOrderNumberDisplay() {
+  const orderNumberDiv = document.getElementById("orderNumberDisplay");
+  if (!orderNumberDiv) return;
+  if (lastOrderNumber) {
+    orderNumberDiv.innerHTML = `<div style='background:#fffbe6;border:1px solid #d4a017;padding:0.7rem 1rem;border-radius:10px;margin-bottom:1rem;text-align:center;'>
+      <strong>Número de pedido:</strong> <span style='color:#d4a017;font-size:1.2em;'>#${lastOrderNumber}</span><br>
+      <span style='color:#4A7043;font-size:0.95em;'>Muéstralo en el local para recoger tu pedido</span>
+    </div>`;
+  } else {
+    orderNumberDiv.innerHTML = "";
+  }
+}
+
+function simulateOrderStatusUpdates(orderNumber) {
+  const orders = confirmedOrders.filter(order => order.orderNumber === orderNumber);
+  setTimeout(() => {
+    orders.forEach(order => {
+      order.status = "En preparación";
+    });
+    updateOrderStatusDisplay();
+    showNotification(`El pedido #${orderNumber} está en preparación.`);
+  }, 5000);
+  setTimeout(() => {
+    orders.forEach(order => {
+      order.status = "Listo para recoger";
+    });
+    updateOrderStatusDisplay();
+    showNotification(`¡El pedido #${orderNumber} está listo para recoger!`);
+  }, 10000);
+}
+
+function checkOrderStatus() {
+  const orderNumberInput = document.getElementById("orderNumberInput");
+  const orderNumber = orderNumberInput.value.trim();
+  const orderStatusContainer = document.getElementById("orderStatusContainer");
+  if (!orderNumber || orderNumber.length !== 4 || isNaN(orderNumber)) {
+    orderStatusContainer.innerHTML = `<p style=\"color: #d9534f;\">Por favor, ingresa un número de orden válido de 4 dígitos.</p>`;
+    return;
+  }
+  const orders = confirmedOrders.filter(order => order.orderNumber === orderNumber);
+  if (orders.length === 0) {
+    orderStatusContainer.innerHTML = `<p style=\"color: #d9534f;\">No se encontró ningún pedido con el número ${orderNumber}.</p>`;
+    return;
+  }
+  // Agrupa por restaurante y muestra productos, cantidad y precio
+  const ordersByRestaurant = {};
+  let totalPedido = 0;
+  orders.forEach(order => {
+    const product = products.find(p => p.id === order.productId);
+    if (!ordersByRestaurant[order.restaurant]) {
+      ordersByRestaurant[order.restaurant] = {
+        restaurantName: product ? product.restaurantName : "Desconocido",
+        items: [],
+        status: order.status
+      };
+    }
+    const precio = product ? product.price * 650 * order.quantity : 0;
+    totalPedido += precio;
+    ordersByRestaurant[order.restaurant].items.push({
+      name: product ? product.name : "Producto desconocido",
+      quantity: order.quantity,
+      price: precio
+    });
+  });
+  orderStatusContainer.innerHTML = `
+    <div style='background:#fffbe6;border:1px solid #d4a017;padding:0.7rem 1rem;border-radius:10px;margin-bottom:1rem;text-align:center;'>
+      <strong>Número de pedido:</strong> <span style='color:#d4a017;font-size:1.2em;'>#${orderNumber}</span><br>
+      <span style='color:#4A7043;font-size:0.95em;'>Estado: <strong>${translateStatus(orders[0].status)}</strong></span>
+    </div>
+    ${Object.values(ordersByRestaurant).map(restaurant => `
+      <div class=\"order-status-item\" style='margin-bottom:1.5rem;'>
+        <h4>${restaurant.restaurantName}</h4>
+        <ul style='margin-top:0.5rem;'>
+          ${restaurant.items.map(item => `<li>${item.name} (x${item.quantity}) - ₡${item.price.toLocaleString()}</li>`).join("")}
+        </ul>
+      </div>
+    `).join("")}
+    <div style='text-align:right;font-weight:bold;margin-top:1rem;'>Total del pedido: ₡${totalPedido.toLocaleString()}</div>
+  `;
+}
+
+function translateStatus(status) {
+  switch (status) {
+    case "Recibido":
+      return "Recibido";
+    case "En preparación":
+      return "En preparación";
+    case "Listo para recoger":
+      return "Listo para recoger";
+    default:
+      return status;
+  }
+}
+
+function updateOrderStatusDisplay() {
+  const orderStatusModal = document.getElementById("orderStatusModal");
+  if (orderStatusModal && orderStatusModal.style.display === "block") {
+    checkOrderStatus();
+  }
+}
+
+function showOrderStatusModal() {
+  const modal = document.getElementById("orderStatusModal");
+  modal.style.display = "block";
+  document.getElementById("orderNumberInput").value = "";
+  document.getElementById("orderStatusContainer").innerHTML = "";
+}
+
+function closeOrderStatusModal() {
+  const modal = document.getElementById("orderStatusModal");
+  modal.style.display = "none";
+}
+
+window.addToCartWithSuggestion = addToCartWithSuggestion;
+window.showRestaurantMenu = showRestaurantMenu;
+window.showAllProducts = showAllProducts;
+window.showHome = showHome;
+window.showEvents = showEvents;
+window.clearCart = clearCart;
+window.removeFromCart = removeFromCart;
+window.showDishModal = showDishModal;
+window.closeModal = closeModal;
+window.showReviewModal = showReviewModal;
+window.closeReviewModal = closeReviewModal;
+window.submitReview = submitReview;
+window.checkout = checkout;
+window.adjustQuantity = adjustQuantity;
+window.showOrderStatusModal = showOrderStatusModal;
+window.closeOrderStatusModal = closeOrderStatusModal;
+window.checkOrderStatus = checkOrderStatus;
