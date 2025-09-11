@@ -613,13 +613,29 @@ footer {
   color: white;
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   font-weight: bold;
   border: 1px solid var(--color-light);
-  white-space: nowrap;
-  max-width: 120px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  max-width: 220px;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  text-overflow: initial;
+  line-height: 1.2;
+  text-align: right;
+}
+
+@media (max-width: 600px) {
+  .badge-restaurante {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    max-width: 120px;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    line-height: 1.2;
+    text-align: right;
+  }
 }
 
 .item-info {
@@ -1079,21 +1095,33 @@ footer {
 
 /* Notification */
 .cart-notification {
-  animation: fadeIn 0.1s ease-out;
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  background: var(--color-primary);
+  color: var(--color-light);
+  padding: 1rem 2rem !important;
+  border-radius: 12px !important;
+  border: 1px solid var(--color-terra);
+  box-shadow: 0 4px 16px rgba(212, 160, 23, 0.18);
+  z-index: 3000;
+  font-family: "Lora", serif;
+  font-size: 1.1rem !important;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  animation: fadeInCart 0.4s forwards, fadeOutCart 0.4s 1.6s forwards;
 }
 
-.restaurante-card, .menu-item, .evento-card {
-  animation: fadeIn 0.5s ease-out;
+@keyframes fadeInCart {
+  from { opacity: 0; transform: translate(-50%, -60%) scale(0.95); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
-.cart-notification {
-  animation: fadeIn 0.1s ease-out;
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {
-  .restaurantes-grid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  }
+@keyframes fadeOutCart {
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
 /* Responsive */
@@ -1218,10 +1246,57 @@ nav ul li a {
   }
 }
 
+/* Order status modal */
+.order-status-item {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  border: 1px solid var(--color-terra);
+}
+
+.order-status-item h4 {
+  color: var(--color-primary);
+  font-family: "Merriweather", serif;
+  margin-bottom: 0.5rem;
+}
+
+.order-status-item p {
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.order-status-item ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0;
+}
+
+.order-status-item li {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 0.3rem;
+}
+
+#orderNumberInput {
+  width: 100%;
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  border: 2px solid var(--color-terra);
+  border-radius: 8px;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+#orderNumberInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 8px rgba(74, 112, 67, 0.3);
+}
+
 @media (min-width: 769px) and (max-width: 1024px) {
 .restaurantes-grid {
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  
 }
 }
 
