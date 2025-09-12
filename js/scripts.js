@@ -28,7 +28,7 @@ const products = [
 // Datos de eventos
 const events = {
   today: [
-    { id: 1, title: "Noche de Karaoke", restaurant: "El Barril", time: "8:00 PM", description: "Ven y demuestra tu talento en nuestra noche de karaoke" },
+    { id: 1, title: "Noche de Karaoke", restaurant: "El Barril", time: "8:00 PM", description: "Ven y demuestra tu talento en nuestra noche de karaoke", image: "images/eventos/karaoke.jpg" },
     { id: 2, title: "Pizza 2x1", restaurant: "Piazza Napoli", time: "Todo el día", description: "Promoción especial: lleva 2 pizzas por el precio de 1" },
   ],
   week: [
@@ -687,6 +687,33 @@ function closeOrderStatusModal() {
   const modal = document.getElementById("orderStatusModal");
   modal.style.display = "none";
 }
+
+function renderEvents(eventsArr) {
+  const eventosGrid = document.getElementById("eventosGrid");
+  if (!eventosGrid) return;
+  eventosGrid.innerHTML = eventsArr.map(ev => `
+    <div class="evento-card" onclick="openEventModal('${ev.image}', '${ev.title}', '${ev.description}')">
+      <img src="${ev.image}" alt="${ev.title}" class="evento-img">
+      <h3>${ev.title}</h3>
+      <p>${ev.restaurant}</p>
+    </div>
+  `).join("");
+}
+
+// Nueva función para abrir el modal con animación
+function openEventModal(imgSrc, title, desc) {
+  const modal = document.getElementById("eventModal");
+  document.getElementById("eventModalImg").src = imgSrc;
+  document.getElementById("eventModalDesc").innerHTML = `<h2>${title}</h2><p>${desc}</p>`;
+  modal.classList.add("open");
+}
+
+function closeEventModal() {
+  const modal = document.getElementById("eventModal");
+  modal.classList.remove("open");
+}
+
+
 
 window.addToCartWithSuggestion = addToCartWithSuggestion;
 window.showRestaurantMenu = showRestaurantMenu;
