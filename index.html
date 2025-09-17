@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Comarca GastroPark</title>
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Merriweather:wght@400;700&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <header>
@@ -15,182 +14,159 @@
         </div>
         <nav>
             <ul>
-                <li><a href="#" onclick="showHome()">Inicio</a></li>
-                <li><a href="#" onclick="showEvents()">Eventos</a></li>
+                <li><a href="#" onclick="showHome(); return false;">Inicio</a></li>
+                <li><a href="#" onclick="showEvents(); return false;">Eventos</a></li>
+                    <li><a href="#" onclick="showOrderStatusView(); return false;">Estado de Pedido</a></li>
                 <li><a href="#contacto">Contacto</a></li>
             </ul>
         </nav>
     </header>
 
-    <main>
-        <div id="homeView">
-            <!-- <section class="hero">
-                <h1>Bienvenidos</h1>
-                <p>Descubre una experiencia gastronómica única con 10 restaurantes especializados</p>
-            </section> -->
+    <!-- Modal para Estado de Pedido -->
+    <div id="orderStatusModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeOrderStatusModal()">&times;</span>
+            <h2>Consultar Estado del Pedido</h2>
+            <p>Ingresa tu número de orden de 4 dígitos:</p>
+            <input type="text" id="orderNumberInput" placeholder="Ej: 1234" maxlength="4">
+            <button class="btn-primary" onclick="checkOrderStatus()">Consultar</button>
+            <div id="orderStatusContainer"></div>
+        </div>
+    </div>
+        <!-- Vista de Estado de Pedido -->
+        <section id="orderStatusView" style="display: none;">
+            <button class="btn-back" onclick="showHome()"><i class="fas fa-arrow-left"></i> Volver</button>
+            <h2>Mis Pedidos Confirmados</h2>
+            <div id="orderListContainer"></div>
+        </section>
 
-            <section class="eventos-destacados">
-                <h2>Eventos de Hoy</h2>
-                <div class="eventos-grid">
-                    <div class="evento-card">
-                        <h3>Noche de Jazz</h3>
-                        <p>El Barril - 8:00 PM</p>
-                    </div>
-                    <div class="evento-card">
-                        <h3>Happy Hour</h3>
-                        <p>Cócteles & Más - 5:00 PM - 7:00 PM</p>
-                    </div>
-                    <div class="evento-card">
-                        <h3>Taller de Pizza</h3>
-                        <p>Piazza Napoli - 6:00 PM</p>
-                    </div>
-                </div>
-            </section>
+    <!-- Vista Principal (Home) -->
+    <section id="homeView">
 
-            <section class="restaurantes">
-                <h2>Nuestros Restaurantes</h2>
-                <div class="filtros-restaurantes">
-                    <button class="filtro-btn active" data-tipo="todos">Todos</button>
-                    <button class="filtro-btn" data-tipo="bar">Bar</button>
-                    <button class="filtro-btn" data-tipo="pizzeria">Pizzería</button>
-                    <button class="filtro-btn" data-tipo="mariscos">Mariscos</button>
-                    <button class="filtro-btn" data-tipo="mexicana">Mexicana</button>
-                    <button class="filtro-btn" data-tipo="carnes">Carnes</button>
-                    <button class="filtro-btn" data-tipo="asiatica">Asiática</button>
-                    <button class="filtro-btn" data-tipo="italiana">Italiana</button>
-                    <button class="filtro-btn" data-tipo="vegetariana">Vegetariana</button>
-                    <button class="filtro-btn" data-tipo="postres">Postres</button>
-                </div>
-                <div class="restaurantes-grid" id="restaurantesGrid"></div>
-                <div style="text-align: center; margin: 2rem 0;">
-                    <button class="btn-primary" onclick="showAllProducts()">
-                        <i class="fas fa-th-large"></i>
-                        Ver Todo
-                    </button>
-                </div>
-            </section>
+        <div class="eventos-destacados">
+            <h2>Eventos de Hoy</h2>
+            <div id="todayEventsGrid" class="eventos-grid"></div>
         </div>
 
-        <div id="menuView" class="menu-page" style="display: none;">
-            <div class="menu-header">
-                <button class="btn-back" onclick="showHome()">
-                    <i class="fas fa-arrow-left"></i> Volver
-                </button>
-                <h1 id="menuTitle">Todos los Menús</h1>
-                <p class="restaurante-tipo" id="menuSubtitle">Explora todos nuestros productos</p>
-                <div class="restaurante-info" id="restauranteInfo" style="display: none;">
-                    <span><i class="far fa-clock"></i> <span id="horarioInfo"></span></span>
-                    <span><i class="fas fa-star"></i> <span id="ratingInfo"></span></span>
-                </div>
+        <div class="restaurantes">
+            <h2>Nuestros Restaurantes</h2>
+            <div class="filtros-restaurantes">
+                <button class="filtro-btn active" data-tipo="todos">Todos</button>
+                <button class="filtro-btn" data-tipo="bar">Bar</button>
+                <button class="filtro-btn" data-tipo="pizzeria">Pizzería</button>
+                <button class="filtro-btn" data-tipo="mariscos">Mariscos</button>
+                <button class="filtro-btn" data-tipo="mexicana">Mexicana</button>
+                <button class="filtro-btn" data-tipo="carnes">Carnes</button>
+                <button class="filtro-btn" data-tipo="asiatica">Asiática</button>
+                <button class="filtro-btn" data-tipo="italiana">Italiana</button>
+                <button class="filtro-btn" data-tipo="vegetariana">Vegetariana</button>
+                <button class="filtro-btn" data-tipo="postres">Postres</button>
             </div>
-
-            <div class="menu-filters">
-                <button class="filter-btn active" data-category="todos">Todos</button>
-                <button class="filter-btn" data-category="bebidas">Bebidas</button>
-                <button class="filter-btn" data-category="entradas">Entradas</button>
-                <button class="filter-btn" data-category="platos-principales">Platos Principales</button>
-                <button class="filter-btn" data-category="postres">Postres</button>
+            <div style="text-align:center; margin: 1rem 0;">
+                <button id="verTodoBtn" class="btn-primary" style="padding: 0.7rem 2rem; font-size: 1.1rem; border-radius: 8px;">Ver todo</button>
             </div>
+            <div id="restaurantesGrid" class="restaurantes-grid"></div>
+        </div>
+    </section>
 
-            <div class="menu-grid" id="menuGrid"></div>
-
-            <div class="order-summary" id="orderSummary">
-                <div class="order-header">
-                    <h2><i class="fas fa-shopping-cart"></i> Mi Pedido</h2>
-                    <button class="btn-clear" onclick="clearCart()">
-                        <i class="fas fa-trash"></i> Limpiar
-                    </button>
-                </div>
-                <div class="order-items" id="orderItems">
-                    <div class="empty-cart">
-                        <p>Tu pedido está vacío</p>
-                        <i class="fas fa-shopping-cart"></i>
-                    </div>
-                </div>
-                <div class="order-total">
-                    Total: ₡<span id="orderTotal">0.00</span>
-                </div>
-                <button class="btn-primary" onclick="checkout()">
-                    <i class="fas fa-check"></i> Confirmar Pedido
-                </button>
-            </div>
-
-            <button id="floatingCartBtn" style="position: fixed; bottom: 40px; right: 40px; z-index: 1000; background: #ff9800; color: #fff; border: none; border-radius: 50%; width: 60px; height: 60px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-size: 2rem; display: flex; align-items: center; justify-content: center; cursor: pointer;">
-                <i class="fas fa-shopping-cart"></i>
-            </button>
-
-            <!-- New modal for dish details -->
-            <div id="dishModal" class="modal" style="display:none;position:fixed;z-index:4000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);align-items:center;justify-content:center;">
-              <div class="modal-content" style="background:#fff;padding:2rem;border-radius:12px;max-width:400px;margin:auto;position:relative;">
-                <span class="close" onclick="closeModal()" style="position:absolute;top:10px;right:20px;font-size:2rem;cursor:pointer;">&times;</span>
-                <h2 id="dishName"></h2>
-                <p>Local: <a id="restaurantLink" style="color:var(--color-primary);cursor:pointer;text-decoration:underline;" onclick="showRestaurantMenu(this.dataset.restaurantId)"></a></p>
-                <p id="dishDescription"></p>
-                <p>Precio: <span id="dishPrice"></span></p>
-                <p>Alergenos: <span id="dishAllergens"></span></p>
-                <label for="suggestions" style="margin-top:1rem;display:block;">Sugerencias (ej. quitar ingrediente por alergia, término de la carne):</label>
-                <textarea id="suggestions" rows="3" style="width:100%;margin-bottom:1rem;"></textarea>
-                <button id="addWithSuggestion" onclick="addToCartWithSuggestion()" class="btn-primary" style="width:100%;"><i class="fas fa-plus"></i> Agregar al carrito</button>
-              </div>
+    <!-- Vista de Menú -->
+    <section id="menuView" class="menu-page" style="display: none;">
+        <div id="orderNumberDisplay"></div>
+        <button class="btn-back" onclick="showHome()"><i class="fas fa-arrow-left"></i> Volver</button>
+        <div class="menu-header">
+            <h1 id="menuTitle">Menú</h1>
+            <p id="menuSubtitle">Explora el menú</p>
+            <div id="restauranteInfo" class="restaurante-info" style="display: none;">
+                <span id="horarioInfo"><i class="far fa-clock"></i></span>
+                <span id="ratingInfo"><i class="fas fa-star"></i></span>
             </div>
         </div>
-
-        <div id="eventsView" style="display: none;">
-            <div class="menu-header">
-                <button class="btn-back" onclick="showHome()">
-                    <i class="fas fa-arrow-left"></i> Volver
-                </button>
-                <h1>Eventos</h1>
-                <p class="restaurante-tipo">Descubre lo que está pasando</p>
+        <div class="menu-filters">
+            <button class="filter-btn active" data-category="todos">Todos</button>
+            <button class="filter-btn" data-category="bebidas">Bebidas</button>
+            <button class="filter-btn" data-category="entradas">Entradas</button>
+            <button class="filter-btn" data-category="platos principales">Platos Principales</button>
+            <button class="filter-btn" data-category="postres">Postres</button>
+        </div>
+        <div id="menuGrid" class="menu-grid"></div>
+        <aside id="orderSummary" class="order-summary">
+            <div class="order-header">
+                <h2><i class="fas fa-shopping-cart"></i> Mi Pedido</h2>
+                <button class="btn-clear" onclick="clearCart()"><i class="fas fa-trash"></i> Limpiar</button>
             </div>
+            <div id="orderItems" class="order-items"></div>
+            <div class="order-total">Total: <span id="orderTotal">₡0.00</span></div>
+            <button class="btn-primary" onclick="checkout()"><i class="fas fa-check"></i> Confirmar Pedido</button>
+        </aside>
+        <button id="floatingCartBtn" class="add-to-cart" style="position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; border-radius: 50%;"><i class="fas fa-shopping-cart"></i></button>
+    </section>
 
-            <div class="event-tabs">
-                <button class="tab-btn active" data-tab="today">Hoy</button>
-                <button class="tab-btn" data-tab="week">Esta Semana</button>
-                <button class="tab-btn" data-tab="month">Este Mes</button>
-            </div>
-
-            <div class="event-content">
-                <div id="today" class="tab-content active">
-                    <div class="eventos-grid">
-                        <div class="evento-card">
-                            <h3>Noche de Jazz</h3>
-                            <p>El Barril - 8:00 PM</p>
-                            <p>Disfruta de jazz en vivo con nuestro combo de cervezas artesanales</p>
-                        </div>
-                        <div class="evento-card">
-                            <h3>Happy Hour</h3>
-                            <p>Cócteles & Más - 5:00 PM - 7:00 PM</p>
-                            <p>2x1 en todos los cócteles de la casa</p>
-                        </div>
-                    </div>
-                </div>
-                <div id="week" class="tab-content">
-                    <div class="eventos-grid">
-                        <div class="evento-card">
-                            <h3>Taller de Pizza</h3>
-                            <p>Piazza Napoli - Martes 15 - 6:00 PM</p>
-                            <p>Aprende a hacer pizza auténtica con nuestros chefs</p>
-                        </div>
-                        <div class="evento-card">
-                            <h3>Mariscada Especial</h3>
-                            <p>Mariscos del Caribe - Jueves 17 - Todo el día</p>
-                            <p>Promoción especial en platos de mariscos</p>
-                        </div>
-                    </div>
-                </div>
-                <div id="month" class="tab-content">
-                    <div class="eventos-grid">
-                        <div class="evento-card">
-                            <h3>Festival de Cerveza</h3>
-                            <p>Todos - 25-27 - Todo el día</p>
-                            <p>Evento especial con cervezas artesanales de todo el país</p>
-                        </div>
-                    </div>
-                </div>
+    <!-- Modal para Platillo -->
+    <div id="dishModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="dishName"></h2>
+            <p id="dishDescription"></p>
+            <p><strong>Local: </strong><span id="restaurantLink"></span></p>
+            <p><strong>Precio: </strong><span id="dishPrice"></span></p>
+            <p><strong>Alergenos: </strong><span id="dishAllergens"></span></p>
+            <label>Sugerencias (ej. quitar ingrediente por alergia, término de la carne):</label>
+            <textarea id="suggestions" placeholder="Ej: Sin cebolla, bien cocida..."></textarea>
+            <button id="addWithSuggestion" class="add-to-cart"><i class="fas fa-plus"></i> Agregar al carrito</button>
+            <div class="reviews-section">
+                <h4>Reseñas</h4>
+                <div id="dishReviews"></div>
+                <button id="addDishReviewBtn" class="btn-add-review">Añadir Reseña</button>
             </div>
         </div>
-    </main>
+    </div>
+
+    <!-- Modal para Reseñas -->
+    <div id="reviewModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeReviewModal()">&times;</span>
+            <h2 id="reviewModalTitle">Añadir Reseña</h2>
+            <p id="reviewModalSubtitle">Reseña para el item</p>
+                        <div style="margin-bottom: 1rem;">
+                                <label>Puntuación:</label>
+                                <div class="review-stars-box">
+                                    <input type="radio" id="rating5" name="reviewRating" value="5" checked><label for="rating5" class="star-label">&#9733;</label>
+                                    <input type="radio" id="rating4" name="reviewRating" value="4"><label for="rating4" class="star-label">&#9733;</label>
+                                    <input type="radio" id="rating3" name="reviewRating" value="3"><label for="rating3" class="star-label">&#9733;</label>
+                                    <input type="radio" id="rating2" name="reviewRating" value="2"><label for="rating2" class="star-label">&#9733;</label>
+                                    <input type="radio" id="rating1" name="reviewRating" value="1"><label for="rating1" class="star-label">&#9733;</label>
+                                </div>v
+                        </div>
+            <label>Comentario:</label>
+            <textarea id="reviewComment" placeholder="Comparte tu experiencia..."></textarea>
+            <input type="text" id="reviewName" placeholder="Tu nombre (opcional)" class="review-input">
+            <input type="tel" id="reviewPhone" placeholder="Teléfono (solo si la reseña es mala)" class="review-input" style="display: none;">
+            <button class="btn-primary" onclick="submitReview()">Enviar Reseña</button>
+        </div>
+    </div>
+
+    <!-- Vista de Eventos -->
+    <section id="eventsView" style="display: none;">
+    <button class="btn-back" onclick="showHome()"><i class="fas fa-arrow-left"></i> Volver</button>
+    <div class="eventos-acordeon">
+      <h2>Eventos</h2>
+      <div class="event-tabs">
+        <button class="tab-btn active" data-tab="todayTab">Hoy</button>
+        <button class="tab-btn" data-tab="weekTab">Esta Semana</button>
+        <button class="tab-btn" data-tab="monthTab">Este Mes</button>
+      </div>
+      <div id="eventosAcordeonContainer"></div>
+    </div>
+  </section>
+
+    <!-- Modal para Eventos con animación de split horizontal -->
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEventModal()">&times;</span>
+            <img id="eventModalImg" src="" alt="Evento" style="display: none;">
+            <div id="eventModalDesc"></div>
+        </div>
+    </div>
 
     <footer id="contacto">
         <div class="footer-content">
@@ -210,15 +186,15 @@
                     <a href="https://www.facebook.com/share/1CYem5AGeo/"><i class="fab fa-facebook"></i></a>
                     <a href="https://www.instagram.com/la.comarcagastropark?igsh=bW43MHB0OG9yMG8y"><i class="fab fa-instagram"></i></a>
                     <a href="https://www.tiktok.com/@la.comarcagastropark?_t=ZM-8z8TOSBnnGv&_r=1"><i class="fab fa-tiktok"></i></a>
+
                 </div>
             </div>
         </div>
         <div class="copyright">
-            <p>&copy; 2025 La Comarca GastroPark. Todos los derechos reservados.</p>
+            © 2025 La Comarca GastroPark. Todos los derechos reservados.
         </div>
     </footer>
 
     <script src="js/scripts.js"></script>
-
 </body>
 </html>
