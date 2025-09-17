@@ -119,6 +119,16 @@ function setupEventListeners() {
     });
   });
 
+  // 'Ver todo' button event
+  const verTodoBtn = document.getElementById("verTodoBtn");
+  if (verTodoBtn) {
+    verTodoBtn.addEventListener("click", () => {
+      document.querySelectorAll(".filtro-btn").forEach((btn) => btn.classList.remove("active"));
+
+      showAllProducts();
+    });
+  }
+
   document.querySelectorAll(".filter-btn").forEach((button) => {
     button.addEventListener("click", () => {
       document.querySelectorAll(".filter-btn").forEach((btn) => btn.classList.remove("active"));
@@ -464,8 +474,10 @@ function submitReview() {
   const radios = document.querySelectorAll('input[name="reviewRating"]');
   const rating = parseInt(Array.from(radios).find(r => r.checked).value);
   const comment = document.getElementById("reviewComment").value.trim();
-  const name = document.getElementById("reviewName")?.value.trim() || "Cliente Anónimo";
-  const phone = document.getElementById("reviewPhone")?.value.trim();
+  let name = document.getElementById("reviewName")?.value.trim();
+  let phone = document.getElementById("reviewPhone")?.value.trim();
+  if (name === "") name = null;
+  if (phone === "") phone = null;
   if (rating <= 2 && !phone) {
     showNotification("Por favor ingresa tu número de teléfono para que podamos contactarte y resolver el conflicto.", "error");
     return;
@@ -473,8 +485,8 @@ function submitReview() {
   addReview(type, id, {
     rating,
     comment,
-    name,
-    phone: rating <= 2 ? phone : ""
+    name: name || "Cliente Anónimo",
+    phone: rating <= 2 ? phone : null
   });
   closeReviewModal();
   showNotification("¡Gracias por tu reseña!");
@@ -653,7 +665,7 @@ function showNotification(message, type = "success") {
 function clearCart() {
   cart.length = 0;
   updateCartDisplay();
-  showNotification("Carrito vaciado.");
+  // showNotification("Carrito vaciado.");
 }
 
 function checkout() {
@@ -728,49 +740,29 @@ function checkOrderStatus() {
     orderStatusContainer.innerHTML = `<p style="color: #d9534f;">No se encontró ningún pedido con el número ${orderNumber}.</p>`;
     return;
   }
-  // Agrupa por restaurante y muestra productos, cantidad, precio, sugerencia y estado
-  const ordersByRestaurant = {};
   let totalPedido = 0;
-  orders.forEach(order => {
-    const product = products.find(p => p.id === order.productId);
-    if (!ordersByRestaurant[order.restaurant]) {
-      ordersByRestaurant[order.restaurant] = {
-        restaurantName: product ? product.restaurantName : "Desconocido",
-        items: [],
-        status: order.status
-      };
-    }
-    const precio = product ? product.price * 650 * order.quantity : 0;
-    totalPedido += precio;
-    ordersByRestaurant[order.restaurant].items.push({
-      name: product ? product.name : "Producto desconocido",
-      quantity: order.quantity,
-      price: precio,
-      suggestion: order.suggestion || ""
-    });
-  });
   let html = `
     <div style='background:#fffbe6;border:1px solid #d4a017;padding:0.7rem 1rem;border-radius:10px;margin-bottom:1rem;text-align:center;'>
       <strong>Número de pedido:</strong> <span style='color:#d4a017;font-size:1.2em;'>#${orderNumber}</span><br>
-      <span style='color:#4A7043;font-size:0.95em;'>Estado general: <strong>${translateStatus(orders[0].status)}</strong></span>
+      <span style='color:#4A7043;font-size:0.95em;'>Estado: <strong>${translateStatus(orders[0].status)}</strong></span>
     </div>
+    <ul style='margin-top:0.5rem;'>
   `;
-  Object.values(ordersByRestaurant).forEach(restaurant => {
+  orders.forEach(order => {
+    const product = products.find(p => p.id === order.productId);
+    const precio = product ? product.price * 650 * order.quantity : 0;
+    totalPedido += precio;
     html += `
-      <div class="order-status-item" style='margin-bottom:1.5rem;'>
-        <h4>${restaurant.restaurantName} - Estado: ${translateStatus(restaurant.status)}</h4>
-        <ul style='margin-top:0.5rem;'>
-          ${restaurant.items.map(item => `
-            <li>
-              ${item.name} (x${item.quantity}) - ₡${item.price.toLocaleString()}<br>
-              ${item.suggestion ? `<small style="color: #666;">Sugerencia: ${item.suggestion}</small>` : ''}
-            </li>
-          `).join("")}
-        </ul>
-      </div>
+      <li>
+        ${product ? product.name : 'Producto desconocido'} (x${order.quantity}) - ₡${precio.toLocaleString()}
+        ${order.suggestion ? `<br><small style="color:#666;">Sugerencia: ${order.suggestion}</small>` : ''}
+      </li>
     `;
   });
-  html += `<div style='text-align:right;font-weight:bold;margin-top:1rem;font-size:1.2rem;'>Total del pedido: ₡${totalPedido.toLocaleString()}</div>`;
+  html += `
+    </ul>
+    <div style='text-align:right;font-weight:bold;margin-top:1rem;font-size:1.2rem;'>Total: ₡${totalPedido.toLocaleString()}</div>
+  `;
   orderStatusContainer.innerHTML = html;
 }
 
@@ -827,18 +819,32 @@ function renderOrderList() {
     grouped[order.orderNumber].push(order);
   });
   Object.entries(grouped).forEach(([orderNumber, orders]) => {
-    html += `<div style='background:#fffbe6;border:1px solid #d4a017;padding:0.7rem 1rem;border-radius:10px;margin-bottom:1rem;'>`;
-    html += `<strong>Número de pedido:</strong> <span style='color:#d4a017;font-size:1.2em;'>#${orderNumber}</span><br>`;
-    html += `<span style='color:#4A7043;font-size:0.95em;'>Estado general: <strong>${translateStatus(orders[0].status)}</strong></span>`;
-    html += `<ul style='margin-top:0.5rem;'>`;
+    let totalPedido = 0;
+    html += `
+      <div class="order-card">
+        <div class="order-card-header">
+          <span class="order-card-number">Pedido #${orderNumber}</span>
+          <span class="order-card-status">${translateStatus(orders[0].status)}</span>
+        </div>
+        <ul class="order-card-list">
+    `;
     orders.forEach(order => {
       const product = products.find(p => p.id === order.productId);
       const precio = product ? product.price * 650 * order.quantity : 0;
-      html += `<li>${product ? product.name : 'Producto desconocido'} (x${order.quantity}) - ₡${precio.toLocaleString()}<br>`;
-      if (order.suggestion) html += `<small style='color:#666;'>Sugerencia: ${order.suggestion}</small>`;
-      html += `</li>`;
+      totalPedido += precio;
+      html += `
+        <li>
+          <span style="font-weight:600;">${product ? product.name : 'Producto desconocido'}</span> <span style="color:#888;">(x${order.quantity})</span> <span style="float:right;">₡${precio.toLocaleString()}</span>
+          ${order.suggestion ? `<div class="order-card-suggestion">Sugerencia: ${order.suggestion}</div>` : ''}
+        </li>
+      `;
     });
-    html += `</ul></div>`;
+    html += `
+        </ul>
+        <div class="order-card-total">Total: ₡${totalPedido.toLocaleString()}</div>
+        <button class="order-card-pay">Pagar</button>
+      </div>
+    `;
   });
   container.innerHTML = html;
 }

@@ -25,8 +25,7 @@ body {
   color: var(--color-text);
   line-height: 1.8;
   background-size: cover;
-  background-attachment: fixed;
-  margin-top: 80px;
+  margin-top: 180px; /* Aumenta el margen para que el header fijo no tape el contenido */
 }
 
 /* Header (unchanged from previous response) */
@@ -91,7 +90,202 @@ nav ul li a:hover {
   background-color: var(--color-primary);
   border-radius: 4px;
 }
+/* Tarjeta de pedido confirmado */
+.order-card {
+  background: #fffbe6;
+  border: 2px solid var(--color-accent);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(212,160,23,0.18);
+  margin: 2.5rem auto;
+  max-width: 520px;
+  padding: 2.5rem 2rem 2rem 2rem;
+  position: relative;
+  font-size: 1.12rem;
+  transition: box-shadow 0.2s;
+  z-index: 10;
+}
+.order-card:hover {
+  box-shadow: 0 12px 32px rgba(212,160,23,0.22);
+}
+.order-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+.order-card-number {
+  color: var(--color-accent);
+  font-size: 1.4em;
+  font-weight: bold;
+}
+.order-card-status {
+  color: var(--color-primary);
+  font-size: 1.1em;
+  font-weight: 700;
+}
+.order-card-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.7rem 0 0.7rem 0;
+}
+.order-card-list li {
+  margin-bottom: 0.9em;
+  padding-bottom: 0.4em;
+  border-bottom: 2px solid #f5e8c7;
+  font-size: 1.05em;
+}
+.order-card-list li:last-child {
+  border-bottom: none;
+}
+.order-card-total {
+  text-align: right;
+  font-weight: bold;
+  font-size: 1.25rem;
+  margin-top: 1.2rem;
+  color: var(--color-terra);
+}
+.order-card-pay {
+  display: block;
+  margin: 1.5rem auto 0 auto;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.8em 2.2em;
+  font-size: 1.15em;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.order-card-pay:hover {
+  background: var(--color-accent);
+  color: var(--color-dark);
+}
+.order-card-suggestion {
+  color: #666;
+  font-size: 0.98em;
+  margin-top: 0.25em;
+}
+#orderListContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
+  min-height: 400px;
+  padding-bottom: 3rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+/* Review stars horizontal box */
+.review-stars-box {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.3em;
+  margin-top: 0.5em;
+}
+.review-stars-box input[type="radio"] {
+  display: none;
+}
+.star-label {
+  font-size: 2rem;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s;
+  margin: 0 0.1em;
+}
+.review-stars-box input[type="radio"]:checked ~ label.star-label,
+.review-stars-box label.star-label:hover,
+.review-stars-box label.star-label:hover ~ label.star-label {
+  color: #FFD700;
+}
+.review-stars-box label.star-label:active {
+  transform: scale(1.1);
+}
+.order-card {
+  background: #fffbe6 !important;
+  border: 4px solid #d9534f !important; /* Borde rojo temporal para verificación */
+  border-radius: 20px !important;
+  box-shadow: 0 8px 32px rgba(212,160,23,0.18) !important;
+  margin: 2.5rem auto 2.5rem auto !important;
+  max-width: 520px !important;
+  padding: 2.5rem 2rem 2rem 2rem !important;
+  position: relative;
+  font-size: 1.12rem;
+  transition: box-shadow 0.2s;
+  z-index: 10;
+}
+.order-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+.order-card-number {
+  color: #d9534f !important;
+  font-size: 1.4em;
+  font-weight: bold;
+}
+.order-card-status {
+  color: var(--color-primary);
+  font-size: 1.1em;
+  font-weight: 700;
+}
+.order-card-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.7rem 0 0.7rem 0;
+}
+.order-card-list li {
+  margin-bottom: 0.9em;
+  padding-bottom: 0.4em;
+  border-bottom: 2px solid #f5e8c7;
+  font-size: 1.05em;
+}
+.order-card-list li:last-child {
+  border-bottom: none;
+}
+.order-card-total {
+  text-align: right;
+  font-weight: bold;
+  font-size: 1.25rem;
+  margin-top: 1.2rem;
+  color: var(--color-terra);
+}
+.order-card-pay {
+  display: block;
+  margin: 1.5rem auto 0 auto;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.8em 2.2em;
+  font-size: 1.15em;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.order-card-pay:hover {
+  background: var(--color-accent);
+  color: var(--color-dark);
+}
+.order-card-suggestion {
+  color: #666;
+  font-size: 0.98em;
+  margin-top: 0.25em;
+}
 
+#orderListContainer {
+  min-height: 400px;
+  padding-bottom: 3rem;
+}
+/* Scrollable reviews section */
+.reviews-section {
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
 /* Filtros */
 .filtros-restaurantes {
   display: flex;
@@ -220,9 +414,31 @@ nav ul li a:hover {
 }
 
 .eventos-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.evento-card {
+  flex: 1 1 320px;
+  max-width: 400px;
+  min-width: 300px;
+  box-sizing: border-box;
+  background: rgba(208, 174, 143, 0.555);
+  margin: 22px 8px;
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--color-secondary);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(212, 160, 23, 0.3);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .evento-card {
@@ -720,6 +936,7 @@ footer {
   border-left: 1px solid #ddd;
   border-right: 1px solid #ddd;
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .quantity-input::-webkit-outer-spin-button,
@@ -1166,6 +1383,23 @@ footer {
   animation: splitHorizontal 0.6s ease forwards;
 }
 
+#orderListContainer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#orderListContainer li {
+  font-size: 0.95rem;
+  color: var(--color-text);
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f5e8c7;
+}
+
+#orderListContainer li:last-child {
+  border-bottom: none;
+}
 @keyframes splitHorizontal {
   0% {
     transform: scaleY(1);
@@ -1314,4 +1548,4 @@ body {
 @keyframes slideInModal {
   from { transform: scale(0.95); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
-}
+}}

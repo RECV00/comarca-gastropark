@@ -36,7 +36,7 @@
         <!-- Vista de Estado de Pedido -->
         <section id="orderStatusView" style="display: none;">
             <button class="btn-back" onclick="showHome()"><i class="fas fa-arrow-left"></i> Volver</button>
-            <h2>Lista de Pedidos</h2>
+            <h2>Mis Pedidos Confirmados</h2>
             <div id="orderListContainer"></div>
         </section>
 
@@ -61,6 +61,9 @@
                 <button class="filtro-btn" data-tipo="italiana">Italiana</button>
                 <button class="filtro-btn" data-tipo="vegetariana">Vegetariana</button>
                 <button class="filtro-btn" data-tipo="postres">Postres</button>
+            </div>
+            <div style="text-align:center; margin: 1rem 0;">
+                <button id="verTodoBtn" class="btn-primary" style="padding: 0.7rem 2rem; font-size: 1.1rem; border-radius: 8px;">Ver todo</button>
             </div>
             <div id="restaurantesGrid" class="restaurantes-grid"></div>
         </div>
@@ -124,14 +127,16 @@
             <span class="close" onclick="closeReviewModal()">&times;</span>
             <h2 id="reviewModalTitle">Añadir Reseña</h2>
             <p id="reviewModalSubtitle">Reseña para el item</p>
-            <div style="margin-bottom: 1rem;">
-                <label>Puntuación:</label><br>
-                <input type="radio" id="rating5" name="reviewRating" value="5" checked><label for="rating5">5 ⭐</label>
-                <input type="radio" id="rating4" name="reviewRating" value="4"><label for="rating4">4 ⭐</label>
-                <input type="radio" id="rating3" name="reviewRating" value="3"><label for="rating3">3 ⭐</label>
-                <input type="radio" id="rating2" name="reviewRating" value="2"><label for="rating2">2 ⭐</label>
-                <input type="radio" id="rating1" name="reviewRating" value="1"><label for="rating1">1 ⭐</label>
-            </div>
+                        <div style="margin-bottom: 1rem;">
+                                <label>Puntuación:</label>
+                                <div class="review-stars-box">
+                                    <input type="radio" id="rating5" name="reviewRating" value="5" checked><label for="rating5" class="star-label">&#9733;</label>
+                                    <input type="radio" id="rating4" name="reviewRating" value="4"><label for="rating4" class="star-label">&#9733;</label>
+                                    <input type="radio" id="rating3" name="reviewRating" value="3"><label for="rating3" class="star-label">&#9733;</label>
+                                    <input type="radio" id="rating2" name="reviewRating" value="2"><label for="rating2" class="star-label">&#9733;</label>
+                                    <input type="radio" id="rating1" name="reviewRating" value="1"><label for="rating1" class="star-label">&#9733;</label>
+                                </div>v
+                        </div>
             <label>Comentario:</label>
             <textarea id="reviewComment" placeholder="Comparte tu experiencia..."></textarea>
             <input type="text" id="reviewName" placeholder="Tu nombre (opcional)" class="review-input">
